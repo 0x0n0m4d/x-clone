@@ -26,7 +26,7 @@ export async function followUser({ userId, currentUserId }: Props) {
   }
 }
 
-export async function unfollowUse(id: string) {
+export async function unfollowUser(id: string) {
   try {
     if (!id) return;
 
