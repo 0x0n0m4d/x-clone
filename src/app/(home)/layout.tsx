@@ -1,7 +1,7 @@
 import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getUser } from '@/actions/user.action';
+import { getUser, getUsers } from '@/actions/user.action';
 import Bottombar from '@/components/Bottombar';
 import LeftSidebar from '@/components/LeftSidebar';
 import Modal from '@/components/modals/Modal';
@@ -17,6 +17,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const isCompleted = user && user.isCompleted;
   if (!isCompleted) redirect('/onboarding');
 
+  const users = await getUsers({ userId: user.id });
+
   return (
     <main>
       <Modal imageUrl={user.imageUrl} userId={user.id} />
@@ -26,8 +28,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
           name={user.name}
           imageUrl={user.imageUrl}
         />
-        {children}
-        <RightSidebar />
+        <section className="w-full p-3">{children}</section>
+        <RightSidebar users={users ?? []} user={user} />
       </section>
       <Bottombar />
     </main>
