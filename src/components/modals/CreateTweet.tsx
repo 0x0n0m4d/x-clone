@@ -4,7 +4,12 @@ import { useTweetModal } from '@/hooks/useTweetModal';
 import CreateTweetForm from '../forms/CreateTweetForm';
 import { Dialog, DialogContent, DialogHeader } from '../ui/dialog';
 
-const CreateTweet = () => {
+interface Props {
+  userId: string;
+  imageUrl: string;
+}
+
+const CreateTweet = ({ userId, imageUrl }: Props) => {
   const tweetModal = useTweetModal();
 
   return (
@@ -14,7 +19,12 @@ const CreateTweet = () => {
           <h3 className="tracking-wide text-2xl font-semibold">Create Tweet</h3>
         </DialogHeader>
         <div className="mt-5">
-          <CreateTweetForm />
+          <CreateTweetForm
+            isModal
+            userId={userId}
+            imageUrl={imageUrl}
+            id="createtweet"
+          />
         </div>
       </DialogContent>
     </Dialog>

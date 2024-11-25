@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import * as z from 'zod';
 import { createTweet } from '@/actions/tweet.action';
 import { useTweetModal } from '@/hooks/useTweetModal';
+import { cn } from '@/lib/utils';
 import { tweetSchema } from '@/validations/tweet.validation';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem } from '../ui/form';
@@ -17,8 +18,15 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 
-const OnBoarding = () => {
-  const tweetModal = useTweetModal();
+interface Props {
+  isModal?: boolean;
+  userId: string;
+  imageUrl: string;
+  id: string;
+}
+
+const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
+  const tweetModalOnClose = useTweetModal(state => state.onClose);
   const router = useRouter();
 
   const [file, setFile] = useState<File>();
@@ -28,14 +36,13 @@ const OnBoarding = () => {
   const form = useForm<z.infer<typeof tweetSchema>>({
     resolver: zodResolver(tweetSchema),
     defaultValues: {
-      userId: tweetModal.userId!,
+      userId,
       text: '',
       imageUrl: ''
     }
   });
 
   const onChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files);
     const files = event.target.files ?? [];
     if (!files.length) return;
 
@@ -75,8 +82,10 @@ const OnBoarding = () => {
 
       if (!result) return;
 
+      form.reset();
       router.refresh();
-      tweetModal.onClose();
+      setPreviewImage('');
+      if (isModal) tweetModalOnClose();
     } catch (error: any) {
       console.log('[ERROR_CREATE_TWEET_FORM]', error.message);
     }
@@ -96,21 +105,28 @@ const OnBoarding = () => {
     if (!current) return;
     current.addEventListener('input', autoResize);
     autoResize();
+
+    return () => {
+      current.removeEventListener('input', autoResize);
+    };
   }, [textarea]);
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col w-full space-y-4"
+        className={cn(
+          'flex flex-col w-full space-y-4 relative z-0',
+          !isModal && cn('px-3 py-4', isLoading && 'bg-gray-300')
+        )}
       >
         <div className="flex items-start justify-start gap-x-5 w-full">
           <div className="flex justify-start rounded-full overflow-hidden">
             <Image
-              src={tweetModal.imageUrl!}
+              src={imageUrl}
               alt="User Profile"
-              width={50}
-              height={50}
+              width={35}
+              height={35}
               priority
               className="object-cover rounded-full"
             />
@@ -124,7 +140,7 @@ const OnBoarding = () => {
                   <FormControl>
                     <Textarea
                       disabled={isLoading}
-                      className="no-focus !border-none !outline-none w-full p-0 text-white bg-black-100 rounded-none placeholder:text-gray-200 font-normal tracking-wide text-xl resize-none block overflow-hidden max-h-[300px] overflow-y-auto"
+                      className="no-focus !border-none !outline-none w-full p-0 text-white bg-transparent rounded-none placeholder:text-gray-200 font-normal tracking-wide text-xl resize-none block overflow-hidden max-h-[300px] overflow-y-auto"
                       placeholder="What is happening?"
                       {...field}
                       ref={textarea}
@@ -159,11 +175,11 @@ const OnBoarding = () => {
         <div className="h-[1px] w-full bg-gray-300" />
         <div className="flex items-center justify-between">
           <div>
-            <Label>
+            <Label htmlFor={`image-upload-${id}`} className="cursor-pointer">
               <ImageIcon size="20px" className="text-blue hover:text-blue/90" />
             </Label>
             <Input
-              id="image-url"
+              id={`image-upload-${id}`}
               type="file"
               onChange={onChangeImage}
               className="hidden"
@@ -185,4 +201,4 @@ const OnBoarding = () => {
   );
 };
 
-export default OnBoarding;
+export default CreateTweetForm;
