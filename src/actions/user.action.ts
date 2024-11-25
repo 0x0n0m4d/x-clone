@@ -11,6 +11,13 @@ interface saveUserInterface {
   bio: string;
 }
 
+interface getUsersInterface {
+  take?: number;
+  skip?: number;
+  userId: string;
+  searchQuery?: string;
+}
+
 export async function saveUser({
   id,
   imageUrl,
@@ -53,5 +60,31 @@ export async function getUser(id: string) {
     return result;
   } catch (error: any) {
     console.log('[ERROR_GET_USER]', error.message);
+  }
+}
+
+export async function getUsers({
+  take = 2,
+  skip = 0,
+  userId,
+  searchQuery = ''
+}: getUsersInterface) {
+  try {
+    const result = await prisma.user.findMany({
+      where: {
+        id: {
+          not: userId
+        },
+        username: {
+          contains: searchQuery
+        }
+      },
+      take,
+      skip
+    });
+
+    return result;
+  } catch (error: any) {
+    console.log('[ERROR_GET_USERS]', error.message);
   }
 }
