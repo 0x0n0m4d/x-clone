@@ -52,7 +52,11 @@ export async function getUser(id: string) {
     if (!id) return;
 
     const result = await prisma.user.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        followers: true,
+        followings: true
+      }
     });
 
     if (!result) return;
