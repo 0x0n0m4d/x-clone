@@ -28,7 +28,9 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
           name={user.name}
           imageUrl={user.imageUrl}
         />
-        <section className="w-full p-3">{children}</section>
+        <section className="w-full hide-scrollbar max-h-screen overflow-y-auto">
+          {children}
+        </section>
         <RightSidebar users={users ?? []} user={user} />
       </section>
       <Bottombar />
