@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation';
 import * as z from 'zod';
 import { createTweet } from '@/actions/tweet.action';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import { cn } from '@/lib/utils';
+import { DataTweet } from '@/interfaces/tweet.interface';
+import { cn, customDatePost, renderText } from '@/lib/utils';
 import { tweetSchema } from '@/validations/tweet.validation';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem } from '../ui/form';
@@ -23,9 +24,20 @@ interface Props {
   userId: string;
   imageUrl: string;
   id: string;
+  parentId?: string | undefined;
+  isReply?: boolean;
+  dataTweet?: DataTweet;
 }
 
-const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
+const CreateTweetForm = ({
+  isModal,
+  userId,
+  imageUrl,
+  id,
+  parentId,
+  isReply,
+  dataTweet
+}: Props) => {
   const tweetModalOnClose = useTweetModal(state => state.onClose);
   const router = useRouter();
 
@@ -38,7 +50,8 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
     defaultValues: {
       userId,
       text: '',
-      imageUrl: ''
+      imageUrl: '',
+      parentId
     }
   });
 
@@ -100,6 +113,40 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
     current.style.height = current.scrollHeight + 'px';
   };
 
+  const IsReplyComponent = () => {
+    if (!isReply || !dataTweet) return null;
+
+    const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
+
+    return (
+      <section className="flex justify-start items-start gap-x-5 h-full">
+        <div className="flex flex-col items-center justify-start gap-y-1 h-full">
+          <Image
+            src={dataTweet.user.imageUrl}
+            alt={dataTweet.user.name}
+            width={35}
+            height={35}
+            className="object-cover rounded-full"
+          />
+          <div className="h-full w-[2px] bg-gray-300 rounded-full" />
+        </div>
+        <div className="flex-1 flex flex-col gap-y-5">
+          <div className="flex-1 flex items-center flex-wrap gap-x-2">
+            <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">
+              {dataTweet.user.name}
+            </h5>
+            <p className="text-ellipsis whitespace-nowrap font-normal text-gray-200">
+              @{dataTweet.user.username} · {formattedCreatedAt}
+            </p>
+          </div>
+          <p className="whitespace-break-spaces">
+            {renderText(dataTweet.text)}
+          </p>
+        </div>
+      </section>
+    );
+  };
+
   useEffect(() => {
     const { current } = textarea;
     if (!current) return;
@@ -116,11 +163,12 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          'flex flex-col w-full space-y-4 relative z-0',
+          'flex flex-col w-full space-y-4 relative z-0 h-full',
           !isModal && cn('px-3 py-4', isLoading && 'bg-gray-300')
         )}
       >
-        <div className="flex items-start justify-start gap-x-5 w-full">
+        <IsReplyComponent />
+        <section className="flex items-start justify-start gap-x-5 w-full">
           <div className="flex justify-start rounded-full overflow-hidden">
             <Image
               src={imageUrl}
@@ -171,14 +219,15 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
               </div>
             )}
           </div>
-        </div>
+        </section>
         <div className="h-[1px] w-full bg-gray-300" />
-        <div className="flex items-center justify-between">
+        <section className="flex items-center justify-between">
           <div>
             <Label htmlFor={`image-upload-${id}`} className="cursor-pointer">
               <ImageIcon size="20px" className="text-blue hover:text-blue/90" />
             </Label>
             <Input
+              accept="image/*"
               id={`image-upload-${id}`}
               type="file"
               onChange={onChangeImage}
@@ -195,7 +244,7 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
               Post
             </Button>
           </div>
-        </div>
+        </section>
       </form>
     </Form>
   );

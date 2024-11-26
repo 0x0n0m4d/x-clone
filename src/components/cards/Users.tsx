@@ -1,17 +1,12 @@
 'use client';
 
 import { useTransition } from 'react';
-import { Follower, User } from '@prisma/client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { followUser, unfollowUser } from '@/actions/follower.action';
+import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-
-interface UserWithFollowers extends User {
-  followers: Follower[];
-  followings: Follower[];
-}
 
 interface UsersProps {
   username: string;
@@ -38,15 +33,15 @@ const Users = ({
   );
 
   const toggleFollowUserAction = () => {
-    if (followed) {
-      startTransition(() => {
+    startTransition(() => {
+      if (followed) {
         unfollowUser(followed.id);
-      });
-    } else {
-      startTransition(() => {
-        followUser({ userId, currentUserId: currentUser.id });
-      });
-    }
+      } else {
+        startTransition(() => {
+          followUser({ userId, currentUserId: currentUser.id });
+        });
+      }
+    });
 
     router.refresh();
   };
