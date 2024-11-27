@@ -19,8 +19,8 @@ import { useRouter } from 'next/navigation';
 import { toggleFollowUserAction } from '@/actions/follower.action';
 import {
   deleteTweetAction,
-  toggleBookmarkTweet,
-  toggleLikeTweet
+  toggleBookmarkAction,
+  toggleLikeAction
 } from '@/actions/tweet.action';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { DataTweet, TweetWithConnection } from '@/interfaces/tweet.interface';
@@ -56,7 +56,7 @@ const Tweets = ({ tweet, userId }: Props) => {
 
     startTransitionLike(async () => {
       if (liked) {
-        const result = await toggleLikeTweet({
+        const result = await toggleLikeAction({
           likeId: liked.id
         });
 
@@ -69,7 +69,7 @@ const Tweets = ({ tweet, userId }: Props) => {
           return;
         }
       } else {
-        const result = await toggleLikeTweet({
+        const result = await toggleLikeAction({
           userId,
           threadId: tweet.id
         });
@@ -143,7 +143,7 @@ const Tweets = ({ tweet, userId }: Props) => {
 
     startTransitionBookmark(async () => {
       if (bookmark) {
-        const result = await toggleBookmarkTweet({
+        const result = await toggleBookmarkAction({
           bookmarkId: bookmark.id
         });
 
@@ -162,7 +162,7 @@ const Tweets = ({ tweet, userId }: Props) => {
           variant: 'primary'
         });
       } else {
-        const result = await toggleBookmarkTweet({
+        const result = await toggleBookmarkAction({
           userId,
           threadId: tweet.id
         });
