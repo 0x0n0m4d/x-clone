@@ -32,11 +32,16 @@ export function customDatePost(timestamp: number) {
   }
 }
 
-export const renderText = (text: string) => {
-  const textWithoutEmptyLines = text.replace(/^\s*$/gm, '');
-  const textWithSingleLineBreaks = textWithoutEmptyLines.replace(
-    /\n+/g,
-    '\n\n'
-  );
-  return textWithSingleLineBreaks;
+export const fomatDateTime = (Date: Date) => {
+  const formattedTime = Date.toLocaleString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const formattedDate = Date.toLocaleDateString([], {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  return `${formattedTime} · ${formattedDate}`;
 };

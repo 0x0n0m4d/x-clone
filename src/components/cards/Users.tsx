@@ -2,11 +2,12 @@
 
 import { useTransition } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { toggleFollowUserAction } from '@/actions/follower.action';
+import { usePathname } from 'next/navigation';
 import { UserWithFollowers } from '@/interfaces/user.interface';
+import { toggleFollowUser } from '@/lib/user';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 interface UsersProps {
   username: string;
@@ -25,25 +26,13 @@ const Users = ({
   currentUser,
   isOnSearch
 }: UsersProps) => {
-  const router = useRouter();
+  const { toast } = useToast();
+  const path = usePathname();
   const [isPending, startTransition] = useTransition();
 
   const followed = currentUser.followings.find(
     ({ followingId }) => followingId === currentUser.id
   );
-
-  const toggleFollowUser = () => {
-    if (isPending) return;
-    startTransition(() => {
-      if (followed) {
-        toggleFollowUserAction({ id: followed.id });
-      } else {
-        toggleFollowUserAction({ userId, currentUserId: currentUser.id });
-      }
-    });
-
-    router.refresh();
-  };
 
   const isFollowed = () => {
     if (isPending) return '...';
@@ -78,7 +67,18 @@ const Users = ({
         <div>
           <Button
             disabled={isPending}
-            onClick={toggleFollowUser}
+            onClick={() =>
+              toggleFollowUser({
+                isPending,
+                startTransition,
+                toast,
+                path,
+                username,
+                followed,
+                userId,
+                currentUserId: currentUser.id
+              })
+            }
             className={cn(
               'py-1 px-4 font-bold tracking-wide rounded-full',
               !followed
