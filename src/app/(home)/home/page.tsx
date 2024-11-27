@@ -19,7 +19,11 @@ const Page = async ({ searchParams }: { searchParams: { filter: string } }) => {
     <div className="relative">
       <Topbar isFollowing={isFollowing} />
       <div className="border-b border-gray-300">
-        <CreateTweetForm userId={user.id} imageUrl={user.imageUrl} id="home" />
+        <CreateTweetForm
+          userId={user.id}
+          imageUrl={user.imageUrl}
+          htmlForId="home"
+        />
       </div>
       <TweetsList dataTweets={tweets ?? []} userId={user.id} />
     </div>

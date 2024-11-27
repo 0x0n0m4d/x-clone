@@ -6,12 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import * as z from 'zod';
-import { createTweet } from '@/actions/tweet.action';
+import { createTweetAction } from '@/actions/tweet.action';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { DataTweet } from '@/interfaces/tweet.interface';
-import { cn, customDatePost, renderText } from '@/lib/utils';
+import { cn, customDatePost } from '@/lib/utils';
 import { tweetSchema } from '@/validations/tweet.validation';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem } from '../ui/form';
@@ -23,7 +23,7 @@ interface Props {
   isModal?: boolean;
   userId: string;
   imageUrl: string;
-  id: string;
+  htmlForId: string;
   parentId?: string | undefined;
   isReply?: boolean;
   dataTweet?: DataTweet;
@@ -33,13 +33,13 @@ const CreateTweetForm = ({
   isModal,
   userId,
   imageUrl,
-  id,
+  htmlForId,
   parentId,
   isReply,
   dataTweet
 }: Props) => {
-  const tweetModalOnClose = useTweetModal(state => state.onClose);
-  const router = useRouter();
+  const tweetModal = useTweetModal();
+  const path = usePathname();
 
   const [file, setFile] = useState<File>();
   const [previewImage, setPreviewImage] = useState('');
@@ -91,14 +91,18 @@ const CreateTweetForm = ({
         values.imageUrl = response.data.url;
       }
 
-      const result = await createTweet(values);
-
-      if (!result) return;
-
       form.reset();
-      router.refresh();
       setPreviewImage('');
-      if (isModal) tweetModalOnClose();
+      if (isModal) {
+        tweetModal.setDataTweet(undefined);
+        tweetModal.setParentId(undefined);
+        tweetModal.onClose();
+      }
+
+      await createTweetAction({
+        ...values,
+        path
+      });
     } catch (error: any) {
       console.log('[ERROR_CREATE_TWEET_FORM]', error.message);
     }
@@ -115,6 +119,8 @@ const CreateTweetForm = ({
 
   const IsReplyComponent = () => {
     if (!isReply || !dataTweet) return null;
+
+    if (!isModal) return null;
 
     const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
 
@@ -145,6 +151,16 @@ const CreateTweetForm = ({
         </div>
       </section>
     );
+  };
+
+  const showTextSubmitButton = () => {
+    if (!dataTweet) return 'Post';
+    if (isReply) return 'Reply';
+  };
+
+  const showTextPlaceholder = () => {
+    if (!dataTweet) return 'What is happening?';
+    if (isReply) return 'Post your reply';
   };
 
   useEffect(() => {
@@ -189,7 +205,7 @@ const CreateTweetForm = ({
                     <Textarea
                       disabled={isLoading}
                       className="no-focus !border-none !outline-none w-full p-0 text-white bg-transparent rounded-none placeholder:text-gray-200 font-normal tracking-wide text-xl resize-none block overflow-hidden max-h-[300px] overflow-y-auto"
-                      placeholder="What is happening?"
+                      placeholder={showTextPlaceholder()}
                       {...field}
                       ref={textarea}
                     />
@@ -223,12 +239,15 @@ const CreateTweetForm = ({
         <div className="h-[1px] w-full bg-gray-300" />
         <section className="flex items-center justify-between">
           <div>
-            <Label htmlFor={`image-upload-${id}`} className="cursor-pointer">
+            <Label
+              htmlFor={`image-upload-${htmlForId}`}
+              className="cursor-pointer"
+            >
               <ImageIcon size="20px" className="text-blue hover:text-blue/90" />
             </Label>
             <Input
               accept="image/*"
-              id={`image-upload-${id}`}
+              id={`image-upload-${htmlForId}`}
               type="file"
               onChange={onChangeImage}
               className="hidden"
@@ -241,7 +260,7 @@ const CreateTweetForm = ({
               className="px-6 py-1.5 w-fit"
               type="submit"
             >
-              Post
+              {showTextSubmitButton()}
             </Button>
           </div>
         </section>
