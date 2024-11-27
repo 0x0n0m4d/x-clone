@@ -1,7 +1,7 @@
 import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getUser, getUsers } from '@/actions/user.action';
+import { getUserAction, getUsersAction } from '@/actions/user.action';
 import Bottombar from '@/components/Bottombar';
 import LeftSidebar from '@/components/LeftSidebar';
 import Modal from '@/components/modals/Modal';
@@ -13,12 +13,12 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   if (!clerkUser) return null;
 
-  const user = await getUser(clerkUser.id);
+  const user = await getUserAction(clerkUser.id);
 
   const isCompleted = user && user.isCompleted;
   if (!isCompleted) redirect('/onboarding');
 
-  const users = await getUsers({ userId: user.id });
+  const users = await getUsersAction({ userId: user.id });
 
   return (
     <main>

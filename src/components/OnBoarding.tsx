@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadButton } from '@uploadthing/react';
 import Image from 'next/image';
 import * as z from 'zod';
-import { saveUser } from '@/actions/user.action';
+import { saveUserAction } from '@/actions/user.action';
 import { userSchema } from '@/validations/user.validation';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
@@ -53,7 +53,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
     };
 
     try {
-      const result = await saveUser(newUser);
+      const result = await saveUserAction(newUser);
 
       if (!result) return;
 

@@ -1,7 +1,7 @@
 import { currentUser, User } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import { getUser } from '@/actions/user.action';
+import { getUserAction } from '@/actions/user.action';
 import Logout from '@/components/Logout';
 import OnBoarding from '@/components/OnBoarding';
 
@@ -19,7 +19,7 @@ const Page = async () => {
     bio: ''
   };
 
-  const user = await getUser(clerkUser.id);
+  const user = await getUserAction(clerkUser.id);
 
   const isCompleted = user && user.isCompleted;
   if (isCompleted) redirect('/home');

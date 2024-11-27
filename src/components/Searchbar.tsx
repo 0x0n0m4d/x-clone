@@ -3,7 +3,7 @@
 import { ChangeEvent, useState } from 'react';
 import { User } from '@prisma/client';
 import { Search } from 'lucide-react';
-import { getUsers } from '@/actions/user.action';
+import { getUsersAction } from '@/actions/user.action';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import Users from './cards/Users';
@@ -19,7 +19,7 @@ const Searchbar = ({ currentUser }: Props) => {
   const [users, setUsers] = useState<User[]>([]);
 
   async function getAllOfUsers(searchQuery: string) {
-    const result = await getUsers({
+    const result = await getUsersAction({
       searchQuery,
       userId: currentUser.id
     });

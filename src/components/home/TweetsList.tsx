@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useTabsPosts } from '@/hooks/useTabsPosts';
-import { TweetWithConnection } from '@/interfaces/tweet.interface';
+import { MultipleTweetWithConnection } from '@/interfaces/tweet.interface';
 import Tweets from '../cards/Tweets';
 import Loading from '../Loading';
 
 interface Props {
-  dataTweets: TweetWithConnection[];
+  dataTweets: MultipleTweetWithConnection[];
   userId: string;
 }
 
