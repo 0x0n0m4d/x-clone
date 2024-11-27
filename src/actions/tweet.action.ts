@@ -9,7 +9,7 @@ import {
 } from '@/interfaces/tweet.interface';
 import prisma from '@/lib/prismadb';
 
-export const createTweet = async ({
+export const createTweetAction = async ({
   userId,
   imageUrl,
   text,
@@ -26,6 +26,7 @@ export const createTweet = async ({
           parentId
         }
       });
+
       return result;
     }
 
@@ -54,7 +55,7 @@ export async function getTweetsAction({
 }: GetTweetsActionProps) {
   try {
     if (isFollowing) {
-      const result = await prisma.thread.findMany({
+      const results = await prisma.thread.findMany({
         where: {
           parentId: null,
           user: {
@@ -86,7 +87,7 @@ export async function getTweetsAction({
         take
       });
 
-      return result;
+      return results;
     }
 
     const results = await prisma.thread.findMany({
@@ -113,6 +114,7 @@ export async function getTweetsAction({
       },
       take
     });
+
     return results;
   } catch (error: any) {
     console.log('[ERROR_GET_TWEETS]', error.message);
@@ -126,14 +128,15 @@ export async function toggleLikeAction({
   path
 }: ToggleLikeActionProps) {
   try {
-    const exist = await prisma.like.findUnique({
+    const exits = await prisma.like.findUnique({
       where: { id: likeId }
     });
 
-    if (exist) {
+    if (exits) {
       const result = await prisma.like.delete({
         where: { id: likeId }
       });
+
       return result;
     }
 
@@ -163,14 +166,15 @@ export async function toggleBookmarkAction({
   path
 }: ToggleBookmarkActionProps) {
   try {
-    const exist = await prisma.bookmark.findUnique({
+    const exits = await prisma.bookmark.findUnique({
       where: { id: bookmarkId }
     });
 
-    if (exist) {
+    if (exits) {
       const result = await prisma.bookmark.delete({
         where: { id: bookmarkId }
       });
+
       return result;
     }
 
@@ -200,6 +204,7 @@ export async function deleteTweetAction(id: string, path: string) {
     const result = await prisma.thread.delete({
       where: { id }
     });
+
     return result;
   } catch (error: any) {
     console.log('[ERROR_DELETE_TWEET_ACTION]', error.message);
