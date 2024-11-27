@@ -11,6 +11,7 @@ import * as z from 'zod';
 import { createTweetAction } from '@/actions/tweet.action';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { DataTweet } from '@/interfaces/tweet.interface';
+import { renderText } from '@/lib/tweet';
 import { cn, customDatePost } from '@/lib/utils';
 import { tweetSchema } from '@/validations/tweet.validation';
 import { Button } from '../ui/button';
