@@ -32,7 +32,7 @@ export function customDatePost(timestamp: number) {
   }
 }
 
-export const fomatDateTime = (Date: Date) => {
+export const formatDateTime = (Date: Date) => {
   const formattedTime = Date.toLocaleString([], {
     hour: '2-digit',
     minute: '2-digit'
