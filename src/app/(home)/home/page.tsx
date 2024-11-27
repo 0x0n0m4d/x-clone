@@ -21,11 +21,7 @@ const Page = async ({ searchParams }: { searchParams: { filter: string } }) => {
       <div className="border-b border-gray-300">
         <CreateTweetForm userId={user.id} imageUrl={user.imageUrl} id="home" />
       </div>
-      <TweetsList
-        dataTweets={tweets ?? []}
-        filter={searchParams.filter}
-        userId={user.id}
-      />
+      <TweetsList dataTweets={tweets ?? []} userId={user.id} />
     </div>
   );
 };

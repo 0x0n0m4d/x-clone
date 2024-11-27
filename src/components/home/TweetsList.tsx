@@ -9,14 +9,11 @@ import Loading from '../Loading';
 interface Props {
   dataTweets: TweetWithConnection[];
   userId: string;
-  filter: string;
 }
 
 const TweetsList = ({ dataTweets, userId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const status = useTabsPosts(state => state.status);
-
-  console.log(dataTweets);
 
   useEffect(() => {
     setIsLoading(true);

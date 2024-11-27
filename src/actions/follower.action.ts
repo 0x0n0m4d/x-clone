@@ -3,12 +3,27 @@
 import prisma from '@/lib/prismadb';
 
 interface Props {
-  userId: string;
-  currentUserId: string;
+  id?: string;
+  userId?: string;
+  currentUserId?: string;
 }
 
-export async function followUser({ userId, currentUserId }: Props) {
+export async function toggleFollowUserAction({
+  id,
+  userId,
+  currentUserId
+}: Props) {
   try {
+    if (id) {
+      const result = await prisma.follower.delete({
+        where: { id }
+      });
+
+      if (!result) return;
+
+      return result;
+    }
+
     if (!userId || !currentUserId) return;
 
     const result = await prisma.follower.create({

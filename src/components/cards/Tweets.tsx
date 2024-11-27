@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import {
+  ArrowUpRight,
   BookmarkMinus,
   BookmarkPlus,
   Heart,
@@ -9,12 +10,13 @@ import {
   MessageCircle,
   MoreHorizontal,
   Share,
+  Trash,
   UserPlus2,
   UserX2
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { followUser, unfollowUser } from '@/actions/follower.action';
+import { toggleFollowUserAction } from '@/actions/follower.action';
 import {
   deleteTweetAction,
   toggleBookmarkTweet,
@@ -52,16 +54,34 @@ const Tweets = ({ tweet, userId }: Props) => {
   const toggleLikeAction = () => {
     if (isPendingLike) return;
 
-    startTransitionLike(() => {
+    startTransitionLike(async () => {
       if (liked) {
-        toggleLikeTweet({
+        const result = await toggleLikeTweet({
           likeId: liked.id
         });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
       } else {
-        toggleLikeTweet({
+        const result = await toggleLikeTweet({
           userId,
           threadId: tweet.id
         });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
       }
     });
     router.refresh();
@@ -70,14 +90,47 @@ const Tweets = ({ tweet, userId }: Props) => {
   const followed = tweet.user.followers.find(
     ({ followingId }) => followingId === userId
   );
-  const toggleFollowUserAction = () => {
+  const toggleFollowUser = (username: string) => {
     if (isPendingFollowUser) return;
 
-    startTransitionFollowUser(() => {
+    startTransitionFollowUser(async () => {
       if (followed) {
-        unfollowUser(followed.id);
+        const result = await toggleFollowUserAction({ id: followed.id });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
+
+        toast({
+          title: `You unfollowed ${username}`,
+          duration: 2000,
+          variant: 'primary'
+        });
       } else {
-        followUser({ userId, currentUserId: userId });
+        const result = toggleFollowUserAction({
+          userId: tweet.user.id,
+          currentUserId: userId
+        });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
+
+        toast({
+          title: `You followed ${username}`,
+          duration: 2000,
+          variant: 'primary'
+        });
       }
     });
 
@@ -88,11 +141,20 @@ const Tweets = ({ tweet, userId }: Props) => {
   const toggleBookmarkAction = () => {
     if (isPendingBookmark) return;
 
-    startTransitionBookmark(() => {
+    startTransitionBookmark(async () => {
       if (bookmark) {
-        toggleBookmarkTweet({
+        const result = await toggleBookmarkTweet({
           bookmarkId: bookmark.id
         });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
 
         toast({
           title: 'Removed from your Bookmarks',
@@ -100,10 +162,19 @@ const Tweets = ({ tweet, userId }: Props) => {
           variant: 'primary'
         });
       } else {
-        toggleBookmarkTweet({
+        const result = await toggleBookmarkTweet({
           userId,
           threadId: tweet.id
         });
+
+        if (!result) {
+          toast({
+            title: 'Something went wrong, please try again.',
+            duration: 2000,
+            variant: 'destructive'
+          });
+          return;
+        }
 
         toast({
           title: 'Added to your Bookmarks',
@@ -111,6 +182,31 @@ const Tweets = ({ tweet, userId }: Props) => {
           variant: 'primary'
         });
       }
+    });
+
+    router.refresh();
+  };
+
+  const deleteTweet = () => {
+    if (isPendingTweet) return;
+
+    startTransitionTweet(async () => {
+      const result = await deleteTweetAction(tweet.id);
+
+      if (!result) {
+        toast({
+          title: 'Something went wrong, please try again.',
+          duration: 2000,
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: 'Your post was deleted',
+        duration: 2000,
+        variant: 'primary'
+      });
     });
 
     router.refresh();
@@ -132,22 +228,6 @@ const Tweets = ({ tweet, userId }: Props) => {
     tweetModal.setParentId(tweet.id);
     tweetModal.setDataTweet(dataTweet);
     tweetModal.onOpen();
-  };
-
-  const deleteTweet = () => {
-    if (isPendingTweet) return;
-
-    startTransitionTweet(() => {
-      deleteTweetAction(tweet.id);
-
-      toast({
-        title: 'Your post was deleted',
-        duration: 2000,
-        variant: 'primary'
-      });
-    });
-
-    router.refresh();
   };
 
   const renderText = () => {
@@ -219,12 +299,23 @@ const Tweets = ({ tweet, userId }: Props) => {
                 <MoreHorizontal />
               </DropdownMenuTrigger>
               <DropdownMenuContent side="bottom" align="end">
+                <DropdownMenuItem
+                  onClick={() =>
+                    router.push(`/${tweet.user.username}/status/${tweet.id}`)
+                  }
+                >
+                  <ArrowUpRight size="20" />
+                  Go To Post
+                </DropdownMenuItem>
                 {isOwnTweet ? (
                   <DropdownMenuItem onClick={deleteTweet}>
+                    <Trash size="20" />
                     Delete
                   </DropdownMenuItem>
                 ) : (
-                  <DropdownMenuItem onClick={toggleFollowUserAction}>
+                  <DropdownMenuItem
+                    onClick={() => toggleFollowUser(tweet.user.username)}
+                  >
                     {followed ? <UserX2 size="20" /> : <UserPlus2 size="20" />}
                     {followed ? 'Unfollow' : 'Follow'}
                     <span className="max-w-[150px] overflow-hidden whitespace-nowrap text-ellipsis">

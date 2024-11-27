@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { followUser, unfollowUser } from '@/actions/follower.action';
+import { toggleFollowUserAction } from '@/actions/follower.action';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -32,14 +32,13 @@ const Users = ({
     ({ followingId }) => followingId === currentUser.id
   );
 
-  const toggleFollowUserAction = () => {
+  const toggleFollowUser = () => {
+    if (isPending) return;
     startTransition(() => {
       if (followed) {
-        unfollowUser(followed.id);
+        toggleFollowUserAction({ id: followed.id });
       } else {
-        startTransition(() => {
-          followUser({ userId, currentUserId: currentUser.id });
-        });
+        toggleFollowUserAction({ userId, currentUserId: currentUser.id });
       }
     });
 
@@ -79,7 +78,7 @@ const Users = ({
         <div>
           <Button
             disabled={isPending}
-            onClick={toggleFollowUserAction}
+            onClick={toggleFollowUser}
             className={cn(
               'py-1 px-4 font-bold tracking-wide rounded-full',
               !followed
