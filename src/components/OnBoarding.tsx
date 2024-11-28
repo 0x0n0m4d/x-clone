@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { toast } from './ui/use-toast';
 
 interface InitialValueInterface {
   id: string;
@@ -53,9 +54,16 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
     };
 
     try {
-      const result = await saveUserAction(newUser);
+      const responsed = await saveUserAction(newUser);
 
-      if (!result) return;
+      if ('message' in responsed) {
+        toast({
+          title: responsed.message,
+          duration: 2000,
+          variant: 'destructive'
+        });
+        return;
+      }
 
       window.location.href = '/home';
     } catch (error) {
@@ -71,7 +79,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         <FormField
           control={form.control}
           name="imageUrl"
-          render={({ field }) => (
+          render={({ _ }) => (
             <FormItem>
               <div className="flex items-center gap-x-8 space-y-4 sm:space-y-8 flex-wrap">
                 <Label>
