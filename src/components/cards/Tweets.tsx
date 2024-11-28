@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
+import toast from 'react-hot-toast';
 import {
   ArrowUpRight,
   BookmarkMinus,
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import {
   DataTweet,
@@ -38,7 +39,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import { useToast } from '../ui/use-toast';
 
 interface Props {
   tweet: MultipleTweetWithConnection;
@@ -47,8 +47,6 @@ interface Props {
 
 const Tweets = ({ tweet, userId }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
-  const { toast } = useToast();
   const tweetModal = useTweetModal();
   const pathname = usePathname();
 

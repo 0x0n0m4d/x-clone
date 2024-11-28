@@ -1,13 +1,13 @@
 'use client';
 
 import { useTransition } from 'react';
+import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { toggleFollowUser } from '@/lib/user';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import { useToast } from '../ui/use-toast';
 
 interface UsersProps {
   username: string;
@@ -26,7 +26,6 @@ const Users = ({
   currentUser,
   isOnSearch
 }: UsersProps) => {
-  const { toast } = useToast();
   const path = usePathname();
   const [isPending, startTransition] = useTransition();
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
+import toast from 'react-hot-toast';
 import {
   Heart,
   LinkIcon,
@@ -34,7 +35,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import { useToast } from '../ui/use-toast';
 
 interface Props {
   tweet: SingleTweetWithConnection;
@@ -44,7 +44,6 @@ interface Props {
 const DetailTweet = ({ tweet, userId }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
-  const { toast } = useToast();
   const tweetModal = useTweetModal();
 
   const [isPendingLike, startTransitionLike] = useTransition();

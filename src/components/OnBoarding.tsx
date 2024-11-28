@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadButton } from '@uploadthing/react';
 import Image from 'next/image';
@@ -13,7 +14,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
-import { toast } from './ui/use-toast';
 
 interface InitialValueInterface {
   id: string;
@@ -57,12 +57,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
       const responsed = await saveUserAction(newUser);
 
       if ('message' in responsed) {
-        toast({
-          title: responsed.message,
-          duration: 2000,
-          variant: 'destructive'
-        });
-        return;
+        return toast.error(responsed.message);
       }
 
       window.location.href = '/home';

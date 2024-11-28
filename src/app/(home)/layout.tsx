@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
@@ -6,7 +7,6 @@ import Bottombar from '@/components/Bottombar';
 import LeftSidebar from '@/components/LeftSidebar';
 import Modal from '@/components/modals/Modal';
 import RightSidebar from '@/components/RightSidebar';
-import { Toaster } from '@/components/ui/toaster';
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const clerkUser = await currentUser();
@@ -24,7 +24,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main>
-      <Toaster />
+      <Toaster position="bottom-center" />
       <Modal imageUrl={user.imageUrl} userId={user.id} />
       <section className="h-full max-w-7xl mx-auto flex">
         <LeftSidebar
