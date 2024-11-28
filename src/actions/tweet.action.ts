@@ -213,6 +213,64 @@ export async function toggleBookmarkAction({
   }
 }
 
+export async function getBookmarksAction(userId: string) {
+  try {
+    if (!userId) throw new Error('userId required');
+
+    const results = await prisma.bookmark.findMany({
+      where: { userId },
+      include: {
+        thread: {
+          include: {
+            user: {
+              include: {
+                followers: true,
+                followings: true
+              }
+            },
+            bookmarks: true,
+            likes: true,
+            replies: {
+              select: {
+                id: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!results) return [];
+
+    const tweets = results.map(value => value.thread);
+    return tweets;
+  } catch (error: any) {
+    console.log('[ERROR_GET_BOOKMARKS_ACTION]', error);
+    return {
+      message: getErrorMessage(error)
+    };
+  }
+}
+
+export async function deleteBookmarksAction(userId: string, path: string) {
+  try {
+    if (!userId) throw new Error('userId required');
+
+    const deleteBookmarks = await prisma.bookmark.deleteMany({
+      where: { userId }
+    });
+
+    return deleteBookmarks;
+  } catch (error: any) {
+    console.log('[ERROR_DELETE_BOOKMARKS_ACTION]', error);
+    return {
+      message: getErrorMessage(error)
+    };
+  } finally {
+    revalidatePath(path || '/bookmarks');
+  }
+}
+
 export async function deleteTweetAction(id: string, path: string) {
   try {
     if (!id) throw new Error('id required');
