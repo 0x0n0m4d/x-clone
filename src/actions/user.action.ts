@@ -15,7 +15,8 @@ export async function saveUserAction({
   name,
   username,
   email,
-  bio
+  bio,
+  isCompleted
 }: SaveUserActionProps) {
   try {
     if (!id) throw new Error('id required');
@@ -23,6 +24,23 @@ export async function saveUserAction({
     if (!name) throw new Error('name required');
     if (!username) throw new Error('username required');
     if (!email) throw new Error('email required');
+    if (!isCompleted) throw new Error('isCompleted required');
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id }
+    });
+    if (existingUser) {
+      const updateUser = await prisma.user.update({
+        where: { id },
+        data: {
+          name,
+          imageUrl,
+          bio,
+          isCompleted
+        }
+      });
+      return updateUser;
+    }
 
     const newUser = await prisma.user.create({
       data: {
@@ -32,7 +50,7 @@ export async function saveUserAction({
         username,
         email,
         bio,
-        isCompleted: true
+        isCompleted
       }
     });
 

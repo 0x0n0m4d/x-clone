@@ -1,11 +1,18 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
+import { getUserAction } from '@/actions/user.action';
 import CreateAnAccount from '@/components/CreateAnAccount';
 
 export default async function Home() {
   const clerkUser = await currentUser();
-  if (clerkUser) redirect('/onboarding');
+  if (clerkUser) {
+    const user = await getUserAction(clerkUser.id);
+    if (user && 'isCompleted' in user) {
+      const isCompleted = user.isCompleted;
+      if (!isCompleted) redirect('/onboarding');
+    }
+  }
 
   return (
     <main className="max-w-4xl mx-auto h-full grid place-items-center p-3 sm:p-12 lg:p-0">

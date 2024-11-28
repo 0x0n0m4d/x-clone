@@ -1,7 +1,7 @@
 'use client';
 
-import { SignedIn, SignOutButton } from '@clerk/nextjs';
-import { LogOut, Plus } from 'lucide-react';
+import { SignOutButton } from '@clerk/nextjs';
+import { MoreHorizontal, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,6 +9,7 @@ import { links } from '@/constants';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
+import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 interface LeftSidebarProps {
   username: string;
@@ -65,8 +66,8 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
           </span>
         </Button>
       </ul>
-      <SignedIn>
-        <SignOutButton>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="max-lg:p-3 lg:py-2 lg:px-5 rounded-full hover:bg-black-200 transition flex items-center gap-x-20 cursor-pointer !outline-none !w-full">
           <div className="max-lg:p-3 lg:py-2 lg:px-5 rounded-full hover:bg-black-200 transition flex items-center gap-x-20 cursor-pointer">
             <div className="max-lg:hidden lg:flex items-center gap-x-6">
               <Image
@@ -89,10 +90,13 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
                 </span>
               </div>
             </div>
-            <LogOut size={30} />
+            <MoreHorizontal size={30} className="text-white" />
           </div>
+        </DropdownMenuTrigger>
+        <SignOutButton redirectUrl="/">
+          <p>Logout @{username}</p>
         </SignOutButton>
-      </SignedIn>
+      </DropdownMenu>
     </aside>
   );
 };

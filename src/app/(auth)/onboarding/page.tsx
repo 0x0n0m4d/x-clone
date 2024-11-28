@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import { getUserAction } from '@/actions/user.action';
+import { getUserAction, saveUserAction } from '@/actions/user.action';
 import Logout from '@/components/Logout';
 import OnBoarding from '@/components/OnBoarding';
 
@@ -9,6 +9,12 @@ const Page = async () => {
   const clerkUser = await currentUser();
 
   if (!clerkUser) return null;
+
+  const user = await getUserAction(clerkUser.id);
+  if (user && 'isCompleted' in user) {
+    const isCompleted = user.isCompleted;
+    if (isCompleted) redirect('/home');
+  }
 
   const mapUser = {
     id: clerkUser.id,
@@ -19,12 +25,14 @@ const Page = async () => {
     bio: ''
   };
 
-  const user = await getUserAction(clerkUser.id);
+  const createTemporaryUserData = {
+    ...mapUser,
+    name: 'unknown',
+    bio: '',
+    isCompleted: false
+  };
 
-  if (user && 'isCompleted' in user) {
-    const isCompleted = user.isCompleted;
-    if (isCompleted) redirect('/home');
-  }
+  await saveUserAction(createTemporaryUserData);
 
   return (
     <section className="w-full h-full flex lg:flex-row max-lg:flex-col">
