@@ -1,19 +1,27 @@
 import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import CreateTweetForm from '@/components/forms/CreateTweetForm';
 import Topbar from '@/components/home/Topbar';
 import TweetsList from '@/components/home/TweetsList';
 
-const Page = async ({ searchParams }: { searchParams: { filter: string } }) => {
+interface Props {
+  searchParams: {
+    filter: string;
+  };
+}
+
+const Page = async ({ searchParams }: Props) => {
   const clerkUser = await currentUser();
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
-  if (!user) return null;
+  if (!user || 'message' in user) redirect('/');
 
   const isFollowing = searchParams.filter === 'following';
-  const tweets = await getTweetsAction({ userId: user.id, isFollowing });
+  let tweets = await getTweetsAction({ userId: user.id, isFollowing });
+  if (!tweets || 'message' in tweets) tweets = [];
 
   return (
     <div className="relative">

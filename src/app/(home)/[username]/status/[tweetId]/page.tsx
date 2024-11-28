@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import { getTweetAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import NotFound from '@/components/404';
@@ -19,13 +20,13 @@ const Page = async ({ params }: Props) => {
   const username = params.username;
 
   const dataTweet = await getTweetAction(tweetId);
-  if (!dataTweet) return <NotFound />;
+  if (!dataTweet || 'message' in dataTweet) return <NotFound />;
 
   const clerkUser = await currentUser();
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
-  if (!user) return null;
+  if (!user || 'message' in user) redirect('/');
 
   const isValidUsername = user.username === username;
   if (!isValidUsername) return <NotFound />;

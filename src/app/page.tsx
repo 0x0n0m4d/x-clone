@@ -1,7 +1,12 @@
+import { currentUser } from '@clerk/nextjs/server';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import CreateAnAccount from '@/components/CreateAnAccount';
 
-export default function Home() {
+export default async function Home() {
+  const clerkUser = await currentUser();
+  if (clerkUser) redirect('/onboarding');
+
   return (
     <main className="max-w-4xl mx-auto h-full grid place-items-center p-3 sm:p-12 lg:p-0">
       <section className="w-full h-full md:h-fit flex flex-col md:flex-row justify-evenly md:justify-between gap-8">

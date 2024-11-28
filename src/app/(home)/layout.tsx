@@ -14,11 +14,13 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
+  if (!user || 'message' in user) redirect('/');
 
-  const isCompleted = user && user.isCompleted;
+  const isCompleted = user.isCompleted;
   if (!isCompleted) redirect('/onboarding');
 
-  const users = await getUsersAction({ userId: user.id });
+  let users = await getUsersAction({ userId: user.id });
+  if (!users || 'message' in users) users = [];
 
   return (
     <main>
@@ -33,7 +35,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         <section className="w-full hide-scrollbar max-h-screen overflow-y-auto">
           {children}
         </section>
-        <RightSidebar users={users ?? []} user={user} />
+        <RightSidebar users={users} user={user} />
       </section>
       <Bottombar />
     </main>
