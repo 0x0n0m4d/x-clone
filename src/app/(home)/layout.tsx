@@ -1,5 +1,4 @@
 import React from 'react';
-import { Toaster } from 'react-hot-toast';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
@@ -24,7 +23,6 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main>
-      <Toaster position="bottom-center" />
       <Modal imageUrl={user.imageUrl} userId={user.id} />
       <section className="h-full max-w-7xl mx-auto flex">
         <LeftSidebar
