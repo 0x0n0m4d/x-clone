@@ -252,6 +252,7 @@ export async function getTweetAction(id: string) {
     });
 
     if (!result) return;
+    if (!result) return;
 
     return result;
   } catch (error: any) {
