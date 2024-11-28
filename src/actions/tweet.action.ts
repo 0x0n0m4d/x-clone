@@ -8,6 +8,7 @@ import {
   ToggleLikeActionProps
 } from '@/interfaces/tweet.interface';
 import prisma from '@/lib/prismadb';
+import { getErrorMessage } from '@/lib/utils';
 
 export const createTweetAction = async ({
   userId,
@@ -30,7 +31,8 @@ export const createTweetAction = async ({
       return result;
     }
 
-    if (!text || !userId) return;
+    if (!userId) throw new Error('userId required');
+    if (!text) throw new Error('text required');
 
     const result = await prisma.thread.create({
       data: {
@@ -42,7 +44,10 @@ export const createTweetAction = async ({
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_CREATE_TWEET]', error.message);
+    console.log('[ERROR_CREATE_TWEET]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -117,7 +122,10 @@ export async function getTweetsAction({
 
     return results;
   } catch (error: any) {
-    console.log('[ERROR_GET_TWEETS]', error.message);
+    console.log('[ERROR_GET_TWEETS]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   }
 }
 
@@ -140,7 +148,8 @@ export async function toggleLikeAction({
       return result;
     }
 
-    if (!userId || !threadId) return;
+    if (!userId) throw new Error('userId required');
+    if (!threadId) throw new Error('threadId required');
 
     const result = await prisma.like.create({
       data: {
@@ -153,7 +162,10 @@ export async function toggleLikeAction({
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_TOGGLE_LIKE_TWEET]', error.message);
+    console.log('[ERROR_TOGGLE_LIKE_TWEET]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -178,7 +190,8 @@ export async function toggleBookmarkAction({
       return result;
     }
 
-    if (!userId || !threadId) return;
+    if (!userId) throw new Error('userId required');
+    if (!threadId) throw new Error('threadId required');
 
     const result = await prisma.bookmark.create({
       data: {
@@ -191,7 +204,10 @@ export async function toggleBookmarkAction({
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_TOGGLE_BOOKMARK_TWEET]', error.message);
+    console.log('[ERROR_TOGGLE_BOOKMARK_TWEET]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -199,7 +215,7 @@ export async function toggleBookmarkAction({
 
 export async function deleteTweetAction(id: string, path: string) {
   try {
-    if (!id) return;
+    if (!id) throw new Error('id required');
 
     const result = await prisma.thread.delete({
       where: { id }
@@ -207,7 +223,10 @@ export async function deleteTweetAction(id: string, path: string) {
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_DELETE_TWEET_ACTION]', error.message);
+    console.log('[ERROR_DELETE_TWEET_ACTION]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -215,7 +234,7 @@ export async function deleteTweetAction(id: string, path: string) {
 
 export async function getTweetAction(id: string) {
   try {
-    if (!id) return;
+    if (!id) throw new Error('id required');
 
     const result = await prisma.thread.findUnique({
       where: { id },
@@ -251,11 +270,11 @@ export async function getTweetAction(id: string) {
       }
     });
 
-    if (!result) return;
-    if (!result) return;
-
     return result;
   } catch (error: any) {
-    console.log('[ERROR_GET_TWEET]', error.message);
+    console.log('[ERROR_GET_TWEET]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   }
 }

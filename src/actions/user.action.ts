@@ -7,6 +7,7 @@ import {
   ToggleFollowUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
+import { getErrorMessage } from '@/lib/utils';
 
 export async function saveUserAction({
   id,
@@ -17,7 +18,11 @@ export async function saveUserAction({
   bio
 }: SaveUserActionProps) {
   try {
-    if (!id || !imageUrl || !name || !username || !email) return;
+    if (!id) throw new Error('id required');
+    if (!imageUrl) throw new Error('imageUrl required');
+    if (!name) throw new Error('name required');
+    if (!username) throw new Error('username required');
+    if (!email) throw new Error('email required');
 
     const newUser = await prisma.user.create({
       data: {
@@ -33,13 +38,16 @@ export async function saveUserAction({
 
     return newUser;
   } catch (error: any) {
-    console.log('[ERROR_SAVE_USER]', error.message);
+    console.log('[ERROR_SAVE_USER]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   }
 }
 
 export async function getUserAction(id: string) {
   try {
-    if (!id) return;
+    if (!id) throw new Error('id required');
 
     const result = await prisma.user.findUnique({
       where: { id },
@@ -53,7 +61,10 @@ export async function getUserAction(id: string) {
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_GET_USER]', error.message);
+    console.log('[ERROR_GET_USER]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   }
 }
 
@@ -64,6 +75,8 @@ export async function getUsersAction({
   searchQuery = ''
 }: GetUsersActionProps) {
   try {
+    if (!userId) throw new Error('userId required');
+
     const result = await prisma.user.findMany({
       where: {
         id: {
@@ -79,7 +92,10 @@ export async function getUsersAction({
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_GET_USERS]', error.message);
+    console.log('[ERROR_GET_USERS]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   }
 }
 
@@ -100,7 +116,9 @@ export const toggleFollowUserAction = async ({
       return result;
     }
 
-    if (!userId || !currentUserId) return;
+    if (!userId) throw new Error('userId required');
+    if (!currentUserId) throw new Error('currentUserId required');
+
     const result = await prisma.follower.create({
       data: {
         followerId: userId,
@@ -112,7 +130,10 @@ export const toggleFollowUserAction = async ({
 
     return result;
   } catch (error: any) {
-    console.log('[ERROR_TOGGLE_FOLLOWER_USER_ACTION]', error.message);
+    console.log('[ERROR_TOGGLE_FOLLOWER_USER_ACTION]', error);
+    return {
+      message: getErrorMessage(error)
+    };
   } finally {
     revalidatePath(path || '/home');
   }
