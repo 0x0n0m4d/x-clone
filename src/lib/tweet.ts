@@ -19,7 +19,7 @@ export const deleteTweet = ({
 }: DeleteTweetProps) => {
   if (isPending) return;
 
-  startTransition(async () => {
+  startTransition(() => {
     deleteTweetAction(id, path);
 
     toast({
