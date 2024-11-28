@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Lato } from 'next/font/google';
 import { cn } from '@/lib/utils';
@@ -23,6 +24,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={cn('bg-black-100 text-white', font.className)}>
+          <Toaster position="bottom-center" />
           <main className="h-full">{children}</main>
         </body>
       </html>
