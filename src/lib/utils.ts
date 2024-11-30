@@ -67,3 +67,18 @@ export const toastOptions = {
     backgroundColor: '#1D9BF0'
   }
 };
+
+export const months = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember'
+];
