@@ -33,13 +33,13 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
             <li
               key={link.title}
               className={cn(
-                'w-fit max-lg:p-3 lg:py-3 lg:px-5 rounded-full hover:bg-black-200 transition',
+                'w-fit rounded-full overflow-hidden',
                 isSamePath && 'bg-black-200 font-bold'
               )}
             >
               <Link
                 href={link.href}
-                className="flex flex-row items-center gap-x-6 tracking-wider text-xl"
+                className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-lg:p-3 lg:py-3 lg:px-5 hover:bg-black-200 transition"
               >
                 <Image
                   src={link.icon}
