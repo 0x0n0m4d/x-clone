@@ -2,7 +2,9 @@
 
 import { useTransition } from 'react';
 import toast from 'react-hot-toast';
+import { User } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { toggleFollowUser } from '@/lib/user';
@@ -39,27 +41,32 @@ const Users = ({
     return 'Follow';
   };
 
-  const shortenedName = name.length > 10 ? `${name.slice(0, 10)}...` : name;
-  const shortenedUsername =
-    username.length > 8 ? `${username.slice(0, 8)}...` : username;
-
   return (
-    <li className="flex items-center justify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 cursor-pointer overflow-hidden">
-      <div className="flex items-center gap-x-2">
+    <li className="flex items-center justify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 overflow-hidden">
+      <div className="flex items-center gap-x-2 overflow-hidden">
         <Image
           src={imageUrl}
           alt={name}
-          width={50}
-          height={50}
+          width={40}
+          height={40}
           className="object-cover rounded-full"
         />
         <div className="flex items-start flex-col -space-y-1">
-          <h5 className="font-normal text-white whitespace-nowrap">
-            {isOnSearch ? name : shortenedName}
-          </h5>
-          <span className="font-Normal text-gray-200 whitespace-nowrap">
-            @{isOnSearch ? username : shortenedUsername}
-          </span>
+          <Link
+            href={`/${username}`}
+            className="font-normal text-white whitespace-nowrap hover:underline"
+          >
+            {name}
+          </Link>
+          <p className="font-normal text-gray-200 whitespace-nowrap">
+            @{username}
+          </p>
+          {followed && (
+            <p className="font-normal text-gray-200 flex items-centr gap-x-1">
+              <User size={14} />
+              Following
+            </p>
+          )}
         </div>
       </div>
       {!isOnSearch && (
@@ -82,7 +89,7 @@ const Users = ({
               'py-1 px-4 font-bold tracking-wide rounded-full',
               !followed
                 ? 'bg-white hover:bg-white/90 text-black-100'
-                : 'border border-white bg-transparent hove:border-red-500 hover:text-red-500 hover:bg-transparent'
+                : 'border border-gray-200 bg-transparent hove:border-red-500 hover:text-red-500 hover:bg-transparent'
             )}
           >
             {isFollowed()}
