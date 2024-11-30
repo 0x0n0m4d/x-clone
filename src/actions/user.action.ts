@@ -117,6 +117,26 @@ export async function getUsersAction({
   }
 }
 
+export async function getUserByUsernameAction(username: string) {
+  try {
+    if (!username) throw new Error('username required');
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        followers: true,
+        followings: true
+      }
+    });
+
+    return user;
+  } catch (error: any) {
+    return {
+      message: getErrorMessage(error)
+    };
+  }
+}
+
 export const toggleFollowUserAction = async ({
   id,
   userId,
