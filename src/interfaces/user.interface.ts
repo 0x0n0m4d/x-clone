@@ -13,6 +13,11 @@ export interface toggleFollowUserProps extends InitialProps {
   currentUserId: string;
 }
 
+export interface CopyLinkUserProps {
+  toast: any;
+  username: string;
+}
+
 // action
 export interface SaveUserActionProps {
   id: string;
