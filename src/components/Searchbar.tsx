@@ -1,8 +1,9 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { User } from '@prisma/client';
+import { useDebounce } from '@uidotdev/usehooks';
 import { Search } from 'lucide-react';
 import { getUsersAction } from '@/actions/user.action';
 import { UserWithFollowers } from '@/interfaces/user.interface';
@@ -18,11 +19,13 @@ const Searchbar = ({ currentUser }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<User[]>([]);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   async function getAllOfUsers(searchQuery: string) {
     const data = await getUsersAction({
       searchQuery,
-      userId: currentUser.id
+      userId: currentUser.id,
+      isOnSearch: true
     });
 
     if (!data || 'message' in data)
@@ -30,6 +33,10 @@ const Searchbar = ({ currentUser }: Props) => {
 
     setUsers(data);
   }
+
+  useEffect(() => {
+    getAllOfUsers(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
