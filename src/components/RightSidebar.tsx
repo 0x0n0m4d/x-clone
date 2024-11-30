@@ -10,6 +10,29 @@ interface RightSidebarProps {
 }
 
 const RightSidebar = ({ users, user: currentUser }: RightSidebarProps) => {
+  const isUserEmpty = !users.length;
+
+  const showUsersList = () => {
+    if (isUserEmpty) {
+      return (
+        <p className="text-gray-200 font-normal">
+          there are no users to follow
+        </p>
+      );
+    }
+
+    return users.map(user => (
+      <Users
+        key={user.id}
+        username={user.username}
+        name={user.name}
+        imageUrl={user.imageUrl}
+        userId={user.id}
+        currentUser={currentUser}
+        isOnSearch={false}
+      />
+    ));
+  };
   return (
     <aside className="h-screen w-full max-w-[350px] p-3 border-l border-l-gray-300 max-lg:hidden lg:flex flex-col space-y-6">
       <Searchbar currentUser={currentUser} />
@@ -17,19 +40,7 @@ const RightSidebar = ({ users, user: currentUser }: RightSidebarProps) => {
         <h3 className="text-xl text-gray-100 font-bold tracking-wide">
           Who To Follow
         </h3>
-        <ul>
-          {users.map(user => (
-            <Users
-              key={user.id}
-              username={user.username}
-              name={user.name}
-              imageUrl={user.imageUrl}
-              userId={user.id}
-              currentUser={currentUser}
-              isOnSearch={false}
-            />
-          ))}
-        </ul>
+        <ul>{showUsersList()}</ul>
       </div>
     </aside>
   );

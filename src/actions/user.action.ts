@@ -56,7 +56,7 @@ export async function saveUserAction({
 
     return newUser;
   } catch (error: any) {
-    console.log('[ERROR_SAVE_USER]', error);
+    console.log('[ERROR_SAVE_USER_ACTION]', error);
     return {
       message: getErrorMessage(error)
     };
@@ -87,30 +87,55 @@ export async function getUserAction(id: string) {
 }
 
 export async function getUsersAction({
-  take = 2,
+  take = 10,
   skip = 0,
   userId,
-  searchQuery = ''
+  searchQuery = '',
+  isOnSearch
 }: GetUsersActionProps) {
   try {
     if (!userId) throw new Error('userId required');
 
-    const result = await prisma.user.findMany({
+    if (isOnSearch) {
+      const users = await prisma.user.findMany({
+        where: {
+          id: {
+            not: userId
+          },
+          username: {
+            contains: searchQuery
+          }
+        },
+        take,
+        skip
+      });
+
+      return users;
+    }
+
+    const users = await prisma.user.findMany({
       where: {
         id: {
           not: userId
         },
         username: {
           contains: searchQuery
+        },
+        followers: {
+          none: {
+            NOT: {
+              followerId: userId
+            }
+          }
         }
       },
       take,
       skip
     });
 
-    return result;
+    return users;
   } catch (error: any) {
-    console.log('[ERROR_GET_USERS]', error);
+    console.log('[ERROR_GET_USERS_ACTION]', error);
     return {
       message: getErrorMessage(error)
     };
