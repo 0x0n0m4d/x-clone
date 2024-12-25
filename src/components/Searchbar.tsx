@@ -69,6 +69,7 @@ const Searchbar = ({ currentUser }: Props) => {
             userId={user.id}
             currentUser={currentUser}
             isOnSearch={true}
+            setIsFocused={setIsFocused}
           />
         ))}
       </ul>
@@ -92,9 +93,11 @@ const Searchbar = ({ currentUser }: Props) => {
           className="no-focus !outline-none border-transparent focus:border-blue ps-12 bg-gray-400 text-white placeholder:text-white/80 rounded-full"
           onFocus={() => setIsFocused(true)}
           onBlur={() => {
-            setIsFocused(false);
-            setUsers([]);
-            setSearchTerm('');
+            setTimeout(() => {
+              setIsFocused(false);
+              setUsers([]);
+              setSearchTerm('');
+            }, 100);
           }}
         />
       </div>
@@ -106,7 +109,7 @@ const Searchbar = ({ currentUser }: Props) => {
           )}
         >
           {!searchTerm ? (
-            <p className="font-normal text-gray-200 tracking-wide">
+            <p className="font-normal text-gray-200">
               Try searching for people
             </p>
           ) : (
