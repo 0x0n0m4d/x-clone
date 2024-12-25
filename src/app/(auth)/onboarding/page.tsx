@@ -2,8 +2,8 @@ import { currentUser } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { getUserAction, saveUserAction } from '@/actions/user.action';
+import OnBoarding from '@/components/forms/OnBoarding';
 import Logout from '@/components/Logout';
-import OnBoarding from '@/components/OnBoarding';
 
 const Page = async () => {
   const clerkUser = await currentUser();
