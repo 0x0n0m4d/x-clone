@@ -133,7 +133,7 @@ const CreateTweetForm = ({
             alt={dataTweet.user.name}
             width={35}
             height={35}
-            className="object-cover rounded-full"
+            className="object-cover rounded-full w-[35px] h-[35px]"
           />
           <div className="h-full w-[2px] bg-gray-300 rounded-full" />
         </div>
@@ -193,7 +193,7 @@ const CreateTweetForm = ({
               width={35}
               height={35}
               priority
-              className="object-cover rounded-full"
+              className="object-cover rounded-full w-[35px] h-[35px]"
             />
           </div>
           <div className="mt-2 flex flex-col space-y-4 w-full">
