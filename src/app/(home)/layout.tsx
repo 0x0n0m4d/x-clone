@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
@@ -7,7 +7,11 @@ import LeftSidebar from '@/components/LeftSidebar';
 import Modal from '@/components/modals/Modal';
 import RightSidebar from '@/components/RightSidebar';
 
-const layout = async ({ children }: { children: React.ReactNode }) => {
+interface Props {
+  children: ReactNode;
+}
+
+const layout = async ({ children }: Props) => {
   const clerkUser = await currentUser();
 
   if (!clerkUser) return null;
@@ -30,7 +34,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
           name={user.name}
           imageUrl={user.imageUrl}
         />
-        <section className="w-full hide-scrollbar max-h-screen overflow-y-auto">
+        <section className="w-full hide-scrollbar max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0">
           {children}
         </section>
         <RightSidebar users={users} user={user} />
