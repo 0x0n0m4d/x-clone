@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
@@ -8,7 +8,7 @@ import Topbar from '@/components/profile/Topbar';
 import UserProfile from '@/components/profile/UserProfile';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
   params: {
     username: string;
   };
