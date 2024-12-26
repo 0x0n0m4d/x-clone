@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache';
 import {
   GetUsersActionProps,
   SaveUserActionProps,
-  ToggleFollowUserActionProps
+  ToggleFollowUserActionProps,
+  UpdateUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
 import { getErrorMessage } from '@/lib/utils';
@@ -139,6 +140,44 @@ export async function getUsersAction({
     return {
       message: getErrorMessage(error)
     };
+  }
+}
+
+export async function updateUserAction({
+  id,
+  imageUrl,
+  bannerUrl,
+  name,
+  bio,
+  location,
+  website,
+  path
+}: UpdateUserActionProps) {
+  try {
+    if (!id) throw new Error('id required');
+    if (!imageUrl) throw new Error('imageUrl required');
+    if (!name) throw new Error('name required');
+
+    const updateUser = await prisma.user.update({
+      where: { id },
+      data: {
+        imageUrl,
+        name,
+        bannerUrl,
+        bio,
+        location,
+        website
+      }
+    });
+
+    return updateUser;
+  } catch (error) {
+    console.log('[ERROR_UPDATE_USER_ACTION]', error);
+    return {
+      message: getErrorMessage(error)
+    };
+  } finally {
+    revalidatePath(path || '');
   }
 }
 

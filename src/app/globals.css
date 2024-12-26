@@ -92,3 +92,47 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+.profile__formItem {
+  @apply relative w-full;
+}
+
+.profile__formItem-top {
+  @apply absolute top-3 left-0 px-3 flex item-start justify-between w-full text-gray-200 text-sm;
+}
+
+.profile__input {
+  @apply no-focus bg-transparent border-none ring-[1px] focus:!ring-[2px] rounded text-gray-100 placeholder:text-gray-200 text-lg font-normal !important;
+}
+
+.profile__input-empty {
+  @apply ring-gray-300 focus-within:!ring-gray-300 py-7;
+}
+
+.profile__input-empty__name {
+  @apply ring-red-500 focus-within:!ring-red-500 py-7;
+}
+
+.profile__input-error {
+  @apply ring-red-500 focus-within:!ring-red-500 pt-12 pb-5;
+}
+
+.profile__input-success {
+  @apply ring-gray-300 focus-within:!ring-blue pt-12 pb-5;
+}
+
+.profile__textarea {
+  @apply no-focus bg-transparent border-none ring-[1px] focus:!ring-[2px] rounded text-gray-100 placeholder:text-gray-200 text-lg font-normal resize-none overflow-hidden !important;
+}
+
+.profile__textarea-empty {
+  @apply ring-gray-300 focus-within:!ring-gray-300 p-3;
+}
+
+.profile__textarea-error {
+  @apply ring-red-500 focus-within:!ring-red-500 py-8;
+}
+
+.profile__textarea-success {
+  @apply ring-gray-300 focus-within:!ring-blue py-8;
+}

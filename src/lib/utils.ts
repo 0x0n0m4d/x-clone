@@ -82,3 +82,24 @@ export const months = [
   'November',
   'Desember'
 ];
+
+export function convertToHttps(url: string) {
+  if (!url) return;
+
+  if (url.startsWith('https://')) {
+    return {
+      href: url,
+      title: url.slice(8)
+    };
+  } else if (url.startsWith('http://')) {
+    return {
+      href: 'https://' + url.slice(7),
+      title: url.slice(7)
+    };
+  } else {
+    return {
+      href: 'https://' + url,
+      title: url
+    };
+  }
+}
