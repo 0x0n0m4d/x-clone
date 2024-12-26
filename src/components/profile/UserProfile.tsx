@@ -10,6 +10,7 @@ import { UserWithFollowers } from '@/interfaces/user.interface';
 import { renderText } from '@/lib/tweet';
 import { copyLinkUser, toggleFollowUser } from '@/lib/user';
 import { cn, convertToHttps, months } from '@/lib/utils';
+import EditProfileModal from '../modals/EditProfileModal';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -17,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import EditProfileModal from './EditProfileModas';
 
 interface Props {
   isMyProfile: boolean;
@@ -148,11 +148,17 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
       <div className="flex items-center gap-x-4">
         <Button
           variant="primary"
-          className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm"
+          className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm max-md:hidden md:block"
           onClick={() => setIsOpen(true)}
         >
           Edit Profile
         </Button>
+        <Link
+          href="/settings/profile"
+          className="py-2 px-4 font-bold traking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm max-md:block md:hidden"
+        >
+          Edit Profile
+        </Link>
       </div>
     );
   };

@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from '@prisma/client';
 import axios from 'axios';
-import { Camera, X } from 'lucide-react';
+import { ArrowLeft, Camera, X } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import validator from 'validator';
@@ -177,8 +177,14 @@ const EditProfileForm = ({ user, isModal, setIsOpen }: Props) => {
     }
 
     return (
-      <Button disabled={isLoading} onClick={history.back}>
-        Previous
+      <Button
+        disabled={isLoading}
+        onClick={() => history.back()}
+        className="rounded-full hover:bg-gray-300/50 transition"
+        variant="icon"
+        size="icon"
+      >
+        <ArrowLeft size="16" />
       </Button>
     );
   }
@@ -187,7 +193,7 @@ const EditProfileForm = ({ user, isModal, setIsOpen }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <nav className="sticky top-0 z-10 bg-black/80 backdrop-blur p-4 flex justify-between items-center">
-          <div className="flex items-center gap-x-8">
+          <div className="flex items-center max-sm:gap-x-2 sm:gap-x-8">
             {showCloseOrPrevButton()}
             <h2>Edit Profile</h2>
           </div>

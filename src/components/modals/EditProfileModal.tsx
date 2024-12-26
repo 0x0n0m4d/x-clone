@@ -6,8 +6,8 @@ import EditProfileForm from '../forms/EditProfileForm';
 import { Dialog, DialogContent } from '../ui/dialog';
 
 interface Props {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isOpen?: boolean;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
   user: User;
 }
 
