@@ -2,10 +2,10 @@ import { ReactNode } from 'react';
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
-import NotFound from '@/components/404';
 import Tabs from '@/components/profile/Tabs';
 import Topbar from '@/components/profile/Topbar';
 import UserProfile from '@/components/profile/UserProfile';
+import NotFound from '@/components/sharing/404';
 
 interface Props {
   children: ReactNode;

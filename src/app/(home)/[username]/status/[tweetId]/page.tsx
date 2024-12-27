@@ -2,9 +2,9 @@ import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getTweetAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
-import NotFound from '@/components/404';
 import Tweets from '@/components/cards/Tweets';
 import CreateTweetForm from '@/components/forms/CreateTweetForm';
+import NotFound from '@/components/sharing/404';
 import DetailTweet from '@/components/tweetId/DetailTweet';
 import Topbar from '@/components/tweetId/Topbar';
 

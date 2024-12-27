@@ -1,8 +1,8 @@
 import React from 'react';
 import { User } from '@prisma/client';
 import { UserWithFollowers } from '@/interfaces/user.interface';
-import Users from './cards/Users';
-import Searchbar from './Searchbar';
+import Users from '../cards/Users';
+import Searchbar from '../searchbar/Searchbar';
 
 interface RightSidebarProps {
   users: User[];

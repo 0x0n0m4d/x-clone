@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTabsPosts } from '@/hooks/useTabsPosts';
 import { MultipleTweetWithConnection } from '@/interfaces/tweet.interface';
 import Tweets from '../cards/Tweets';
-import Loading from '../Loading';
+import Loading from '../sharing/Loading';
 
 interface Props {
   dataTweets: MultipleTweetWithConnection[];

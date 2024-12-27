@@ -2,7 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { getUserAction } from '@/actions/user.action';
-import CreateAnAccount from '@/components/CreateAnAccount';
+import CreateAnAccount from '@/components/sharing/CreateAnAccount';
 
 export default async function Home() {
   const clerkUser = await currentUser();

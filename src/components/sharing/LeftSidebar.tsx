@@ -8,8 +8,8 @@ import { usePathname } from 'next/navigation';
 import { links } from '@/constants';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
-import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { DropdownMenu, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 interface LeftSidebarProps {
   username: string;

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { getUserAction, saveUserAction } from '@/actions/user.action';
 import OnBoarding from '@/components/forms/OnBoarding';
-import Logout from '@/components/Logout';
+import Logout from '@/components/sharing/Logout';
 
 const Page = async () => {
   const clerkUser = await currentUser();

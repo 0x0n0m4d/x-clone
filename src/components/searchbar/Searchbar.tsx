@@ -8,8 +8,8 @@ import { Search } from 'lucide-react';
 import { getUsersAction } from '@/actions/user.action';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
-import Users from './cards/Users';
-import { Input } from './ui/input';
+import Users from '../cards/Users';
+import { Input } from '../ui/input';
 
 interface Props {
   currentUser: UserWithFollowers;
