@@ -1,9 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTabsPosts } from '@/hooks/useTabsPosts';
+import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
+import MobileSidebar from './MobileSidebar';
 
 interface TabsProps {
   title: string;
@@ -11,6 +14,7 @@ interface TabsProps {
 }
 interface TopbarProps {
   isFollowing: boolean;
+  user: UserWithFollowers;
 }
 
 const Tabs = ({ title, isFollowing }: TabsProps) => {
@@ -57,11 +61,27 @@ const Tabs = ({ title, isFollowing }: TabsProps) => {
   );
 };
 
-const Topbar = ({ isFollowing }: TopbarProps) => {
+const Topbar = ({ isFollowing, user }: TopbarProps) => {
   return (
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80 border-b border-gray-300">
       <div className="px-3 py-4">
-        <h2 className="font-bold tracking-wide text-xl">Home</h2>
+        <div className="max-sm:flex sm:hidden flex-row justify-start relative">
+          <div className="relative z-10">
+            <MobileSidebar user={user} />
+          </div>
+          <div className="absolute left-0 top-0 rigth-0 z-0 flex justify-center">
+            <Image
+              src="/assets/small-x-logo.svg"
+              alt="X Logo"
+              width={30}
+              height={30}
+              className="object-contain w-[30px] h-[30px]"
+            />
+          </div>
+        </div>
+        <h2 className="font-bold tracking-wide text-xl max-sm:hidden sm:block">
+          Home
+        </h2>
       </div>
       <div className="flex justify-evenly">
         <Tabs title="For You" isFollowing={isFollowing} />

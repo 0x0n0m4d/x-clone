@@ -25,7 +25,7 @@ const Page = async ({ searchParams }: Props) => {
 
   return (
     <div className="relative">
-      <Topbar isFollowing={isFollowing} />
+      <Topbar isFollowing={isFollowing} user={user} />
       <div className="border-b border-gray-300">
         <CreateTweetForm
           userId={user.id}
