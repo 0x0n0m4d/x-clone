@@ -1,5 +1,6 @@
 'use server';
 
+import { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import {
   GetUsersActionProps,
@@ -88,8 +89,8 @@ export async function getUserAction(id: string) {
 }
 
 export async function getUsersAction({
-  take = 10,
-  skip = 0,
+  size = 5,
+  page = 0,
   userId,
   searchQuery = '',
   isOnSearch
@@ -98,6 +99,7 @@ export async function getUsersAction({
     if (!userId) throw new Error('userId required');
 
     if (isOnSearch) {
+      if (!searchQuery) return [];
       const users = await prisma.user.findMany({
         where: {
           id: {
@@ -107,34 +109,51 @@ export async function getUsersAction({
             contains: searchQuery
           }
         },
-        take,
-        skip
+        take: size
       });
 
       return users;
     }
 
-    const users = await prisma.user.findMany({
-      where: {
-        id: {
-          not: userId
-        },
-        username: {
-          contains: searchQuery
-        },
-        followers: {
-          none: {
-            NOT: {
-              followerId: userId
+    const skip = size * page;
+    let dataUsers: User[];
+
+    if (skip) {
+      dataUsers = await prisma.user.findMany({
+        where: {
+          id: {
+            not: userId
+          },
+          followers: {
+            none: {
+              NOT: {
+                followerId: userId
+              }
             }
           }
-        }
-      },
-      take,
-      skip
-    });
+        },
+        skip,
+        take: size
+      });
+    } else {
+      dataUsers = await prisma.user.findMany({
+        where: {
+          id: {
+            not: userId
+          },
+          followers: {
+            none: {
+              NOT: {
+                followerId: userId
+              }
+            }
+          }
+        },
+        take: size
+      });
+    }
 
-    return users;
+    return dataUsers;
   } catch (error: any) {
     console.log('[ERROR_GET_USERS_ACTION]', error);
     return {
