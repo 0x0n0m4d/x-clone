@@ -35,7 +35,7 @@ const Users = ({
   const [isPending, startTransition] = useTransition();
 
   const followed = currentUser.followings.find(
-    ({ followingId }) => followingId === currentUser.id
+    ({ followingId }) => followingId === userId
   );
 
   const isFollowed = () => {
@@ -54,8 +54,8 @@ const Users = ({
   return (
     <li
       className={cn(
-        'flex items-center justify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 overflow-hidden',
-        isOnSearch && 'cursor-pointer'
+        'flex items-center justify-between gap-x-8 w-full hover:bg-gray-300/90 p-3 overflow-hidden',
+        isOnSearch ? 'cursor-pointer' : 'rounded-xl'
       )}
       onClick={redirectToProfilePage}
     >

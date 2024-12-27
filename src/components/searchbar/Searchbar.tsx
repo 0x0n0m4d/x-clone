@@ -10,6 +10,7 @@ import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import Users from '../cards/Users';
 import { Input } from '../ui/input';
+import Focused from './Focused';
 
 interface Props {
   currentUser: UserWithFollowers;
@@ -45,18 +46,6 @@ const Searchbar = ({ currentUser }: Props) => {
     setTimeout(() => {
       getAllOfUsers(value);
     }, 500);
-  };
-
-  const isUsersEmpty = !users.length;
-
-  const renderSearchResults = () => {
-    if (isUsersEmpty) {
-      return (
-        <p className="font-normal text-gray-200 tracking-wide">
-          {searchTerm} not found
-        </p>
-      );
-    }
 
     return (
       <ul>
@@ -76,6 +65,18 @@ const Searchbar = ({ currentUser }: Props) => {
     );
   };
 
+  const onBlurSearch = () => {
+    setTimeout(() => {
+      setIsFocused(false);
+      setUsers([]);
+      setSearchTerm('');
+    }, 100);
+  };
+
+  const onFocusSearch = () => {
+    setIsFocused(true);
+  };
+
   return (
     <div className="relative">
       <div className="relative">
@@ -91,31 +92,17 @@ const Searchbar = ({ currentUser }: Props) => {
           onChange={onChangeSearch}
           placeholder="Search"
           className="no-focus !outline-none border-transparent focus:border-blue ps-12 bg-gray-400 text-white placeholder:text-white/80 rounded-full"
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => {
-            setTimeout(() => {
-              setIsFocused(false);
-              setUsers([]);
-              setSearchTerm('');
-            }, 100);
-          }}
+          onFocus={onFocusSearch}
+          onBlur={onBlurSearch}
         />
       </div>
       {isFocused && (
-        <div
-          className={cn(
-            'absolute max-h-[600px] overflow-y-auto top-14 left-0 right-0 bg-black-100 box-shadow p-3 text-center rounded-xl',
-            isUsersEmpty && 'pb-16'
-          )}
-        >
-          {!searchTerm ? (
-            <p className="font-normal text-gray-200">
-              Try searching for people
-            </p>
-          ) : (
-            renderSearchResults()
-          )}
-        </div>
+        <Focused
+          users={users}
+          currentUser={currentUser}
+          setIsFocused={setIsFocused}
+          searchTerm={searchTerm}
+        />
       )}
     </div>
   );
