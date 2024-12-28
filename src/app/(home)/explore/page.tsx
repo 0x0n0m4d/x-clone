@@ -23,7 +23,7 @@ const Page = async () => {
     <>
       <ButtonCreatePostMobile />
       <Topbar user={user} />
-      <ShowUserData users={users!} user={user} />
+      <ShowUserData initialDataUsers={users!} user={user} />
     </>
   );
 };

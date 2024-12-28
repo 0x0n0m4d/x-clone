@@ -9,11 +9,11 @@ import Users from '../cards/Users';
 import Loading from '../sharing/Loading';
 
 interface Props {
-  users: User[] | null;
+  initialDataUsers: User[] | null;
   user: UserWithFollowers;
 }
 
-const ShowUserData = ({ users, user }: Props) => {
+const ShowUserData = ({ initialDataUsers: users, user }: Props) => {
   const [dataUsers, setDataUsers] = useState(users);
   const [isUsersDataMaxed, setIsUsersDataMaxed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);

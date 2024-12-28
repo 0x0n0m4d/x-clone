@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTabsPosts } from '@/hooks/useTabsPosts';
 import { MultipleTweetWithConnection } from '@/interfaces/tweet.interface';
-import Tweets from '../cards/Tweets';
+import Tweets from '../cards/tweets/Tweets';
 import Loading from '../sharing/Loading';
 
 interface Props {
