@@ -24,17 +24,17 @@ const Page = async ({ searchParams }: Props) => {
   if (!tweets || 'message' in tweets) tweets = [];
 
   return (
-    <div className="relative">
+    <>
       <Topbar isFollowing={isFollowing} user={user} />
-      <div className="border-b border-gray-300">
+      <section className="border-b border-gray-300 mox-sm:hidden">
         <CreateTweetForm
           userId={user.id}
           imageUrl={user.imageUrl}
           htmlForId="home"
         />
-      </div>
+      </section>
       <TweetsList dataTweets={tweets ?? []} userId={user.id} />
-    </div>
+    </>
   );
 };
 
