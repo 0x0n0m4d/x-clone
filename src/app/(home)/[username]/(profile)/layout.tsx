@@ -6,6 +6,7 @@ import Tabs from '@/components/profile/Tabs';
 import Topbar from '@/components/profile/Topbar';
 import UserProfile from '@/components/profile/UserProfile';
 import NotFound from '@/components/sharing/404';
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 
 interface Props {
   children: ReactNode;
@@ -28,6 +29,7 @@ const Layout = async ({ children, params }: Props) => {
 
   return (
     <>
+      <ButtonCreatePostMobile />
       <Topbar name={user.name} username={user.username} userId={user.id} />
       <UserProfile
         isMyProfile={currentUser.id === user.id}

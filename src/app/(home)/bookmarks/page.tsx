@@ -4,6 +4,7 @@ import { getBookmarksAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import Topbar from '@/components/bookmarks/Topbar';
 import TweetsList from '@/components/home/TweetsList';
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 
 const Page = async () => {
   const clerkUser = await currentUser();
@@ -33,7 +34,8 @@ const Page = async () => {
   };
 
   return (
-    <div className="relative">
+    <section className="relative">
+      <ButtonCreatePostMobile />
       <Topbar
         username={user.username}
         userId={user.id}
@@ -44,7 +46,7 @@ const Page = async () => {
       ) : (
         <TweetsList dataTweets={bookmarks} userId={user.id} />
       )}
-    </div>
+    </section>
   );
 };
 

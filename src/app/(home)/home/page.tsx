@@ -5,6 +5,7 @@ import { getUserAction } from '@/actions/user.action';
 import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import Topbar from '@/components/home/Topbar';
 import TweetsList from '@/components/home/TweetsList';
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 
 interface Props {
   searchParams: {
@@ -25,6 +26,7 @@ const Page = async ({ searchParams }: Props) => {
 
   return (
     <>
+      <ButtonCreatePostMobile />
       <Topbar isFollowing={isFollowing} user={user} />
       <section className="border-b border-gray-300 mox-sm:hidden">
         <CreateTweetForm
