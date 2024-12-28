@@ -11,10 +11,7 @@ import {
 } from '@/interfaces/tweet.interface';
 import { renderText } from '@/lib/tweet';
 import { customDatePost } from '@/lib/utils';
-import Comment from './Comment';
-import Like from './Like';
-import Menu from './Menu';
-import Share from './Share';
+import { Comment, Like, Menu, Share } from './';
 
 interface Props {
   tweet: MultipleTweetWithConnection;
