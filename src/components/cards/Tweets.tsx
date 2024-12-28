@@ -18,6 +18,8 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
+import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import {
   DataTweet,
@@ -49,6 +51,9 @@ const Tweets = ({ tweet, userId }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
   const tweetModal = useTweetModal();
   const pathname = usePathname();
+  const router = useRouter();
+  const setDataTweet = useReplyTweet(state => state.setDataTweet);
+  const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
 
   const [isPendingLike, startTransitionLike] = useTransition();
   const [isPendingFollowUser, startTransitionFollowUser] = useTransition();
@@ -61,12 +66,13 @@ const Tweets = ({ tweet, userId }: Props) => {
   );
   const bookmark = tweet.bookmarks.find(item => item.userId === userId);
 
-  const replyTweet = () => {
+  const replyTweet = (isForModal: boolean) => {
     const dataTweet: DataTweet = {
       id: tweet.id,
       text: tweet.text,
       imageUrl: tweet.imageUrl,
       createdAt: tweet.createdAt,
+      parentId: tweet.id,
       user: {
         name: tweet.user.name,
         username: tweet.user.username,
@@ -74,9 +80,13 @@ const Tweets = ({ tweet, userId }: Props) => {
       }
     };
 
-    tweetModal.setParentId(tweet.id);
-    tweetModal.setDataTweet(dataTweet);
-    tweetModal.onOpen();
+    setDataTweet(dataTweet);
+
+    if (isForModal) {
+      setOnOpenReplyTweetModal();
+    } else {
+      router.push('/compose/tweet');
+    }
   };
 
   const formattedCreatedAt =
@@ -188,8 +198,19 @@ const Tweets = ({ tweet, userId }: Props) => {
             <Button
               variant="icon"
               size="icon"
-              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none"
-              onClick={replyTweet}
+              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden"
+              onClick={() => replyTweet(true)}
+            >
+              <MessageCircle size="20px" />
+              <span className="text-sm font-extrabold">
+                {tweet.replies.length}
+              </span>
+            </Button>
+            <Button
+              variant="icon"
+              size="icon"
+              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden"
+              onClick={() => replyTweet(false)}
             >
               <MessageCircle size="20px" />
               <span className="text-sm font-extrabold">

@@ -7,6 +7,7 @@ import CreateTweetForm from '@/components/forms/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import DetailTweet from '@/components/tweetId/DetailTweet';
 import Topbar from '@/components/tweetId/Topbar';
+import { DataTweet } from '@/interfaces/tweet.interface';
 
 interface Props {
   params: {
@@ -34,8 +35,21 @@ const Page = async ({ params }: Props) => {
   const isValidUsername = user.username === username;
   if (!isValidUsername) return <NotFound />;
 
+  const dataReplyTweet: DataTweet = {
+    id: dataTweet.id,
+    text: dataTweet.text,
+    imageUrl: dataTweet.imageUrl,
+    createdAt: dataTweet.createdAt,
+    parentId: dataTweet.id,
+    user: {
+      name: dataTweet.user.name,
+      username: dataTweet.user.username,
+      imageUrl: dataTweet.user.imageUrl
+    }
+  };
+
   return (
-    <div className="relative">
+    <>
       <Topbar />
       <DetailTweet tweet={dataTweet} userId={currentUser.id} />
       <div className="border-b border-gray-300">
@@ -46,12 +60,13 @@ const Page = async ({ params }: Props) => {
           htmlForId="tweetId"
           dataTweet={dataTweet}
           parentId={dataTweet.id}
+          dataTweet={dataReplyTweet}
         />
       </div>
       {dataTweet.replies.map(tweet => (
         <Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
       ))}
-    </div>
+    </>
   );
 };
 
