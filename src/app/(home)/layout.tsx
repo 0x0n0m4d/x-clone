@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
 import Modal from '@/components/modals/Modal';
 import Bottombar from '@/components/sharing/Bottombar';
-import LeftSidebar from '@/components/sharing/LeftSidebar';
+import LeftSidebar from '@/components/sharing/leftsidebar/LeftSidebar';
 import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar';
 
 interface Props {
