@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTweetAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/Tweets';
-import CreateTweetForm from '@/components/forms/CreateTweetForm';
+import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import DetailTweet from '@/components/tweetId/DetailTweet';
 import Topbar from '@/components/tweetId/Topbar';

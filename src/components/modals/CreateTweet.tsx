@@ -2,7 +2,7 @@
 
 import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import CreateTweetForm from '../forms/CreateTweetForm';
+import CreateTweetForm from '../forms/createtweetform/CreateTweetForm';
 import { Dialog, DialogContent, DialogHeader } from '../ui/dialog';
 
 interface Props {

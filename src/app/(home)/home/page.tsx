@@ -2,7 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
-import CreateTweetForm from '@/components/forms/CreateTweetForm';
+import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import Topbar from '@/components/home/Topbar';
 import TweetsList from '@/components/home/TweetsList';
 
