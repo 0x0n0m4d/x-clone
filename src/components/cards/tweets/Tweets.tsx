@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
@@ -28,11 +28,6 @@ const Tweets = ({ tweet, userId }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
   const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
-
-  const [isPendingLike, startTransitionLike] = useTransition();
-  const [isPendingFollowUser, startTransitionFollowUser] = useTransition();
-  const [isPendingBookmark, startTransitionBookmark] = useTransition();
-  const [isPendingTweet, startTransitionTweet] = useTransition();
 
   const liked = tweet.likes.find(like => like.userId === userId);
   const followed = tweet.user.followers.find(
@@ -104,10 +99,6 @@ const Tweets = ({ tweet, userId }: Props) => {
               tweetId={tweet.id}
               path={pathname}
               isOwnTweet={isOwnTweet}
-              isPendingFollowUser={isPendingFollowUser}
-              startTransitionFollowUser={startTransitionFollowUser}
-              isPendingTweet={isPendingTweet}
-              startTransitionTweet={startTransitionTweet}
               followed={followed!}
               userId={tweet.user.id}
               currentUserId={userId}
@@ -133,8 +124,6 @@ const Tweets = ({ tweet, userId }: Props) => {
               replyTweet={replyTweet}
             />
             <Like
-              isPending={isPendingLike}
-              startTransition={startTransitionLike}
               liked={liked!}
               path={pathname}
               userId={userId}
@@ -143,8 +132,6 @@ const Tweets = ({ tweet, userId }: Props) => {
             />
             <div className="flex-1 flex justify-end">
               <Share
-                isPending={isPendingBookmark}
-                startTransition={startTransitionBookmark}
                 path={pathname}
                 userId={userId}
                 tweetId={tweet.id}

@@ -1,6 +1,6 @@
 'use client';
 
-import { TransitionStartFunction } from 'react';
+import { useTransition } from 'react';
 import toast from 'react-hot-toast';
 import { Follower } from '@prisma/client';
 import {
@@ -24,10 +24,6 @@ interface Props {
   username: string;
   tweetId: string;
   isOwnTweet: boolean;
-  isPendingFollowUser: boolean;
-  startTransitionFollowUser: TransitionStartFunction;
-  isPendingTweet: boolean;
-  startTransitionTweet: TransitionStartFunction;
   path: string;
   followed: Follower;
   userId: string;
@@ -38,15 +34,13 @@ const Menu = ({
   username,
   tweetId,
   isOwnTweet,
-  isPendingFollowUser,
-  startTransitionFollowUser,
-  isPendingTweet,
-  startTransitionTweet,
   path,
   userId,
   currentUserId,
   followed
 }: Props) => {
+  const [isPendingTweet, startTransitionTweet] = useTransition();
+  const [isPendingFollowUser, startTransitionFollowUser] = useTransition();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full">
