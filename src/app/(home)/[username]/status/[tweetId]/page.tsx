@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { getTweetAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
-import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import DetailTweet from '@/components/tweetId/DetailTweet';
 import Topbar from '@/components/tweetId/Topbar';
@@ -17,8 +16,7 @@ interface Props {
 }
 
 const Page = async ({ params }: Props) => {
-  const tweetId = params.tweetId;
-  const username = params.username;
+  const { tweetId, username } = params;
 
   const dataTweet = await getTweetAction(tweetId);
   if (!dataTweet || 'message' in dataTweet) return <NotFound />;
@@ -52,7 +50,7 @@ const Page = async ({ params }: Props) => {
     <>
       <Topbar />
       <DetailTweet tweet={dataTweet} userId={currentUser.id} />
-      <div className="border-b border-gray-300">
+      {/* <section className="border-b border-gray-300">
         <CreateTweetForm
           userId={currentUser.id}
           imageUrl={currentUser.imageUrl}
@@ -62,7 +60,7 @@ const Page = async ({ params }: Props) => {
           parentId={dataTweet.id}
           dataTweet={dataReplyTweet}
         />
-      </div>
+      </section> */}
       {dataTweet.replies.map(tweet => (
         <Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
       ))}

@@ -11,7 +11,7 @@ interface Props {
   children: ReactNode;
 }
 
-const layout = async ({ children }: Props) => {
+const Layout = async ({ children }: Props) => {
   const clerkUser = await currentUser();
   if (!clerkUser) return null;
 
@@ -34,4 +34,4 @@ const layout = async ({ children }: Props) => {
   );
 };
 
-export default layout;
+export default Layout;
