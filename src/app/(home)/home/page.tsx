@@ -2,10 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
-import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
-import Topbar from '@/components/home/Topbar';
-import TweetsList from '@/components/home/TweetsList';
-import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
+import Tweets from '@/components/cards/tweets/Tweets';
 
 interface Props {
   searchParams: {
@@ -24,20 +21,9 @@ const Page = async ({ searchParams }: Props) => {
   let tweets = await getTweetsAction({ userId: user.id, isFollowing });
   if (!tweets || 'message' in tweets) tweets = [];
 
-  return (
-    <>
-      <ButtonCreatePostMobile />
-      <Topbar isFollowing={isFollowing} user={user} />
-      <section className="border-b border-gray-300 mox-sm:hidden">
-        <CreateTweetForm
-          userId={user.id}
-          imageUrl={user.imageUrl}
-          htmlForId="home"
-        />
-      </section>
-      <TweetsList dataTweets={tweets ?? []} userId={user.id} />
-    </>
-  );
+  return tweets.map(tweet => (
+    <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
+  ));
 };
 
 export default Page;
