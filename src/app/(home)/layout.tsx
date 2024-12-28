@@ -5,7 +5,7 @@ import { getUserAction, getUsersAction } from '@/actions/user.action';
 import Modal from '@/components/modals/Modal';
 import Bottombar from '@/components/sharing/Bottombar';
 import LeftSidebar from '@/components/sharing/LeftSidebar';
-import RightSidebar from '@/components/sharing/RightSidebar';
+import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar';
 
 interface Props {
   children: ReactNode;
