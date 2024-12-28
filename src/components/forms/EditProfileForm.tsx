@@ -9,7 +9,7 @@ import axios from 'axios';
 import { ArrowLeft, Camera, X } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import validator from 'validator';
+import isURL from 'validator/lib/isURL';
 import * as z from 'zod';
 import { updateUserAction } from '@/actions/user.action';
 import { cn, toastOptions } from '@/lib/utils';
@@ -108,7 +108,7 @@ const EditProfileForm = ({ user, isModal, setIsOpen }: Props) => {
         values.imageUrl = imageUrl;
       }
 
-      const isValidURL = validator.isURL(values.website);
+      const isValidURL = isURL(values.website);
       if (values.website && !isValidURL) {
         toast('Url Is Not Valid', toastOptions);
         return;
