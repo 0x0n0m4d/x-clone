@@ -8,11 +8,10 @@ import { customDatePost } from '@/lib/utils';
 interface Props {
   isReply: boolean;
   dataTweet: DataTweet | null;
-  htmlForId: string;
 }
 
-const Reply = ({ isReply, dataTweet, htmlForId }: Props) => {
-  if (!isReply || !dataTweet || htmlForId === 'tweetId') return null;
+const Reply = ({ isReply, dataTweet }: Props) => {
+  if (!isReply || !dataTweet) return null;
 
   const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
 

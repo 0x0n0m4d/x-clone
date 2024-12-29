@@ -4,6 +4,7 @@ import { getTweetAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
 import NotFound from '@/components/sharing/404';
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 import DetailTweet from '@/components/tweetId/DetailTweet';
 import Topbar from '@/components/tweetId/Topbar';
 import { DataTweet } from '@/interfaces/tweet.interface';
@@ -48,19 +49,9 @@ const Page = async ({ params }: Props) => {
 
   return (
     <>
+      <ButtonCreatePostMobile isMobile dataTweet={dataReplyTweet} />
       <Topbar />
       <DetailTweet tweet={dataTweet} userId={currentUser.id} />
-      {/* <section className="border-b border-gray-300">
-        <CreateTweetForm
-          userId={currentUser.id}
-          imageUrl={currentUser.imageUrl}
-          isReply
-          htmlForId="tweetId"
-          dataTweet={dataTweet}
-          parentId={dataTweet.id}
-          dataTweet={dataReplyTweet}
-        />
-      </section> */}
       {dataTweet.replies.map(tweet => (
         <Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
       ))}
