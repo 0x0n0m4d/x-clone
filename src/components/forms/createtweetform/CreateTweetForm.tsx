@@ -46,11 +46,10 @@ const CreateTweetForm = ({
   imageUrl,
   htmlForId,
   isMobile,
-  isReply,
-  dataTweet
+  isReply
 }: Props) => {
   const onCloseModal = useTweetModal(state => state.onClose);
-  const setDataTweet = useReplyTweet(state => state.setDataTweet);
+  const { dataTweet, setDataTweet } = useReplyTweet();
   const path = usePathname();
 
   const [file, setFile] = useState<File>();
@@ -148,7 +147,7 @@ const CreateTweetForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
           'flex flex-col w-full space-y-4 relative z-0 h-full',
-          !isModal && cn('px-3 py-4', isLoading && 'bg-gray-300')
+          !isModal && 'px-3 py-4'
         )}
       >
         <Topbar
@@ -156,11 +155,7 @@ const CreateTweetForm = ({
           title={showTextSubmitButton()!}
           isLoading={isLoading}
         />
-        <Reply
-          isReply={isReply!}
-          dataTweet={dataTweet!}
-          htmlForId={htmlForId}
-        />
+        <Reply isReply={isReply!} dataTweet={dataTweet!} />
         <section className="flex items-start justify-start gap-x-5 w-full">
           <Image
             src={imageUrl}
@@ -170,24 +165,26 @@ const CreateTweetForm = ({
             priority
             className="object-cover rounded-full w-[35px] h-[35px]"
           />
-          <FormField
-            control={form.control}
-            name="text"
-            render={({ field }) => (
-              <FormItem className="flex-1 mt-2">
-                <FormControl>
-                  <Textarea
-                    className="no-focus !border-none !outline-none w-full p-0 text-white rounded-none placeholder:text-gray-200 font-normal tracking-wide text-xl resize-none block overlow-hidden max-h-[300px] overflow-y-auto bg-transparent"
-                    disabled={isLoading}
-                    placeholder={showTextPlaceholder()}
-                    {...field}
-                    ref={textarea}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <section className="flex-1 flex flex-col space-y-8">
+            <FormField
+              control={form.control}
+              name="text"
+              render={({ field }) => (
+                <FormItem className="flex-1 mt-2">
+                  <FormControl>
+                    <Textarea
+                      className="no-focus !border-none !outline-none w-full p-0 text-white rounded-none placeholder:text-gray-200 font-normal tracking-wide text-xl resize-none block overlow-hidden max-h-[300px] overflow-y-auto bg-transparent"
+                      disabled={isLoading}
+                      placeholder={showTextPlaceholder()}
+                      {...field}
+                      ref={textarea}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </section>
           <PreviewImage
             previewImage={previewImage}
             setPreviewImage={setPreviewImage}
