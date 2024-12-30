@@ -50,6 +50,11 @@ export interface ToggleBookmarkTweetProps extends InitialProps {
   threadId: string;
 }
 
+export interface GetTweetsBySearchActionProps {
+  size?: number;
+  searchQuery: string;
+}
+
 export interface ToggleLikeTweetProps extends InitialProps {
   liked: Like | undefined;
   userId: string;
