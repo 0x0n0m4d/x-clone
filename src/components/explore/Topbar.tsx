@@ -1,7 +1,7 @@
 'use client';
 
 import { UserWithFollowers } from '@/interfaces/user.interface';
-import Searchbar from '../searchbar/Searchbar';
+import Searchbar from '../sharing/searchbar/Searchbar';
 
 interface Props {
   user: UserWithFollowers;

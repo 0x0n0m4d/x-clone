@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import Link from 'next/link';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
-import Users from '../cards/Users';
+import Users from '../../cards/Users';
 
 interface Props {
   users: User[];

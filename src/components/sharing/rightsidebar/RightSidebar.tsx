@@ -1,7 +1,7 @@
 import React from 'react';
 import { User } from '@prisma/client';
 import { UserWithFollowers } from '@/interfaces/user.interface';
-import Searchbar from '../../searchbar/Searchbar';
+import Searchbar from '../searchbar/Searchbar';
 import WhoToFollow from './WhoToFollow';
 
 interface RightSidebarProps {
