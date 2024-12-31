@@ -1,7 +1,6 @@
 'use client';
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { User } from '@prisma/client';
 import { useDebounce } from '@uidotdev/usehooks';
 import { Search } from 'lucide-react';
@@ -29,8 +28,7 @@ const Searchbar = ({ currentUser }: Props) => {
       isOnSearch: true
     });
 
-    if (!data?.length)
-      return toast.error('Something went wrong', { duration: 2000 });
+    if (!data?.length) return;
 
     setUsers(data);
   }
