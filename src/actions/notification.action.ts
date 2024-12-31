@@ -169,3 +169,24 @@ export const markAsReadNotification = async (
     revalidatePath(path);
   }
 };
+
+export const markAllNotificationsAsReadAction = async (
+  userId: string,
+  path: string
+) => {
+  if (!userId) throw new Error('userId required');
+  if (!path) throw new Error('path required');
+
+  try {
+    await prisma.notification.updateMany({
+      where: { userId },
+      data: {
+        isRead: true
+      }
+    });
+  } catch (error) {
+    console.info('[ERROR_MARK_ALL_NOTIFICATIONS_AS_READ_ACTION]', error);
+  } finally {
+    revalidatePath(path);
+  }
+};
