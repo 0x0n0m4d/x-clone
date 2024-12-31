@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache';
 import {
   CommentPostNotificationActionProps,
   FollowUserNotificationActionProps,
-  LikePostNotificationActionProps
+  LikePostNotificationActionProps,
+  ReplyCommentPostNotificationActionProps
 } from '@/interfaces/notifications.interface';
 import prisma from '@/lib/prismadb';
 
@@ -87,6 +88,29 @@ export const commentPostNotificationAction = async ({
     });
   } catch (error) {
     console.info('[ERROR_COMMENT_POST_NOTIFICATION]', error);
+  } finally {
+    revalidatePath(path);
+  }
+};
+
+export const replyCommentPostNotificationAction = async ({
+  userId,
+  sourceId,
+  parentIdPost,
+  path
+}: ReplyCommentPostNotificationActionProps) => {
+  try {
+    await prisma.notification.create({
+      data: {
+        userId,
+        sourceId,
+        parentIdPost,
+        parentType: 'Post',
+        activityType: 'Reply'
+      }
+    });
+  } catch (error) {
+    console.info('[ERROR_REPLY_COMMENT_POST_NOTIFICATION]', error);
   } finally {
     revalidatePath(path);
   }
