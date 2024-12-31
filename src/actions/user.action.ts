@@ -215,15 +215,14 @@ export async function getUserByUsernameAction(username: string) {
 }
 
 export const toggleFollowUserAction = async ({
-  id,
   userId,
   currentUserId,
   path
 }: ToggleFollowUserActionProps) => {
   try {
-    if (id) {
+    if (userId && !currentUserId) {
       const result = await prisma.follower.delete({
-        where: { id }
+        where: { followerId: userId }
       });
 
       if (!result) return;
