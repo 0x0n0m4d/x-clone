@@ -37,41 +37,29 @@ const Page = async ({ searchParams }: Props) => {
   });
 
   const DisplayContent = () => {
-    if (!people?.length && !tweets?.length) {
-      return (
-        <NotFound
-          title={`No results for "${queryQ}"`}
-          description="Try searching for something else"
-        />
-      );
-    }
-    if (!queryF)
-      return (
+    const Comp: any = {
+      top: (
         <Top
           currentUser={user}
           queryQ={queryQ}
           people={people}
           tweets={tweets}
         />
-      );
+      ),
+      latest: <Latest userId={user.id} tweets={tweets} />,
+      people: <People queryQ={queryQ} people={people} currentUser={user} />,
+      media: <Media tweets={tweets} userId={user.id} />,
+      notFound: (
+        <NotFound
+          title={`No results for "${queryQ}"`}
+          description="Try searching for something else"
+        />
+      )
+    };
 
-    switch (queryF.toLowerCase()) {
-      case 'top':
-        return (
-          <Top
-            currentUser={user}
-            queryQ={queryQ}
-            people={people}
-            tweets={tweets}
-          />
-        );
-      case 'latest':
-        return <Latest userId={user.id} tweets={tweets} />;
-      case 'people':
-        return <People people={people} currentUser={user} queryQ={queryQ} />;
-      case 'media':
-        return <Media tweets={tweets} userId={user.id} />;
-    }
+    if (!people?.length && !tweets?.length) return Comp['notFound'];
+    if (typeof queryF == 'undefined') return Comp['top'];
+    return Comp[queryF.toLowerCase()];
   };
 
   return (
