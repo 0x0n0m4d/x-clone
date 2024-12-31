@@ -18,9 +18,11 @@ const Top = ({ tweets, people, currentUser, queryQ }: Props) => {
     query: { q: queryQ, f: 'people' }
   };
 
+  const isDataPeopleEmpty = !people?.length;
+
   return (
     <>
-      {people && (
+      {!isDataPeopleEmpty && (
         <section className="border-b border-gray-300">
           <h2 className="text-xl font-bold px-3 py-4">People</h2>
           {people.slice(0, 3).map(user => (
