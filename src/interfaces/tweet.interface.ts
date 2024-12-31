@@ -58,6 +58,7 @@ export interface GetTweetsBySearchActionProps {
 export interface ToggleLikeTweetProps extends InitialProps {
   liked: Like | undefined;
   userId: string;
+  currentUserId: string;
   threadId: string;
   path: string;
 }

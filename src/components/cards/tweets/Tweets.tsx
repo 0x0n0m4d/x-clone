@@ -123,7 +123,8 @@ const Tweets = ({ tweet, userId }: Props) => {
             <Like
               liked={liked!}
               path={pathname}
-              userId={userId}
+              userId={tweet.user.id}
+              currentUserId={userId}
               threadId={tweet.id}
               totalLikes={tweet.likes.length}
             />
