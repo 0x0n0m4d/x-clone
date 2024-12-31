@@ -1,4 +1,4 @@
-import { likePostNotification } from '@/actions/notification.action';
+import { likePostNotificationAction } from '@/actions/notification.action';
 import {
   deleteTweetAction,
   toggleBookmarkAction,
@@ -93,7 +93,7 @@ export const toggleLikeTweet = ({
         threadId,
         path
       });
-      likePostNotification({
+      likePostNotificationAction({
         userId,
         sourceId: currentUserId,
         parentIdPost: threadId,

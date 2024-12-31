@@ -14,7 +14,8 @@ interface ParentTypePostProps {
 
 export interface FollowUserNotificationActionProps
   extends ParentTypeUserProps {}
-export interface LikePostNotificationProps extends ParentTypePostProps {}
-export interface CommentPostNotificationProps extends ParentTypePostProps {}
+export interface LikePostNotificationActionProps extends ParentTypePostProps {}
+export interface CommentPostNotificationActionProps
+  extends ParentTypePostProps {}
 export interface ReplyCommentPostNotificationActionProps
   extends ParentTypePostProps {}
