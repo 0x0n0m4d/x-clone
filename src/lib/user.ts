@@ -1,3 +1,4 @@
+import { followUserNotificationAction } from '@/actions/notification.action';
 import { toggleFollowUserAction } from '@/actions/user.action';
 import {
   CopyLinkUserProps,
@@ -29,6 +30,13 @@ export const toggleFollowUser = ({
       toggleFollowUserAction({ userId, currentUserId, path });
 
       toast(`You followed ${username}`, toastOptions);
+
+      followUserNotificationAction({
+        userId,
+        sourceId: currentUserId,
+        parentIdUser: currentUserId,
+        path
+      });
     }
   });
 };
