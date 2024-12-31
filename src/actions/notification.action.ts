@@ -1,7 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { FollowUserNotificationActionProps } from '@/interfaces/notifications.interface';
+import {
+  FollowUserNotificationActionProps,
+  LikePostNotificationProps
+} from '@/interfaces/notifications.interface';
 import prisma from '@/lib/prismadb';
 
 export const followUserNotificationAction = async ({
@@ -27,6 +30,29 @@ export const followUserNotificationAction = async ({
     });
   } catch (error) {
     console.info('[ERROR_FOLLOW_USER_NOTIFICATION_ACTION]', error);
+  } finally {
+    revalidatePath(path);
+  }
+};
+
+export const likePostNotification = async ({
+  userId,
+  sourceId,
+  parentIdPost,
+  path
+}: LikePostNotificationProps) => {
+  try {
+    await prisma.notification.create({
+      data: {
+        userId,
+        sourceId,
+        parentIdPost,
+        activityType: 'Like',
+        parentType: 'Post'
+      }
+    });
+  } catch (error) {
+    console.info('[ERROR_LIKE_POST_NOTIFICATION]', error);
   } finally {
     revalidatePath(path);
   }
