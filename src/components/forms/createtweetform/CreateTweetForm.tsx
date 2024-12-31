@@ -8,6 +8,7 @@ import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import * as z from 'zod';
+import { commentPostNotification } from '@/actions/notification.action';
 import { createTweetAction } from '@/actions/tweet.action';
 import {
   Form,
@@ -100,6 +101,15 @@ const CreateTweetForm = ({
         ...values,
         path
       });
+
+      if (dataTweet && dataTweet.parentId) {
+        await commentPostNotification({
+          userId: dataTweet.user.id,
+          sourceId: userId,
+          parentIdPost: dataTweet.id,
+          path
+        });
+      }
 
       if (isMobile && isReply) {
         window.location.href = `/${dataTweet?.user?.username}/status/${dataTweet?.id}`;
