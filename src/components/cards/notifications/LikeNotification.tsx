@@ -8,6 +8,7 @@ import { markAsReadNotification } from '@/actions/notification.action';
 import { DataNotification } from '@/interfaces/notifications.interface';
 import { renderText } from '@/lib/tweet';
 import { customDatePost } from '@/lib/utils';
+import Unread from './Unread';
 
 interface Props {
   dataNotification: DataNotification;
@@ -51,7 +52,7 @@ const LikeNotification = ({ dataNotification }: Props) => {
           className="object-contain w-[25px] h-[25px]"
         />
       </div>
-      <div className="w-full flex flex-row items-center justify-between gap-x-8">
+      <div className="notifications__component-body">
         <div className="flex flex-col space-y-2 flex-1">
           <Image
             src={
@@ -76,23 +77,24 @@ const LikeNotification = ({ dataNotification }: Props) => {
               {customDatePost(dataNotification.createdAt.getTime())}
             </p>
           </div>
+          <div className="flex flex-col space-y-2">
+            <p className="font-normal text-gray-200">
+              {renderText(dataNotification.post?.text!)}
+            </p>
+            {dataNotification.post?.imageUrl && (
+              <div className="">
+                <Image
+                  src={dataNotification.post?.imageUrl}
+                  alt={dataNotification.post?.text}
+                  width={300}
+                  height={300}
+                  className="object-cover w-[50px] h-[50px]"
+                />
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <p className="font-normal text-gray-200">
-            {renderText(dataNotification.post?.text!)}
-          </p>
-          {dataNotification.post?.imageUrl && (
-            <div className="">
-              <Image
-                src={dataNotification.post?.imageUrl}
-                alt={dataNotification.post?.text}
-                width={300}
-                height={300}
-                className="object-cover w-[50px] h-[50px]"
-              />
-            </div>
-          )}
-        </div>
+        {!dataNotification.isRead && <Unread />}
       </div>
     </div>
   );

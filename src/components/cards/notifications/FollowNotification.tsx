@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
 import { DataNotification } from '@/interfaces/notifications.interface';
 import { customDatePost } from '@/lib/utils';
+import Unread from './Unread';
 
 interface Props {
   dataNotification: DataNotification;
@@ -51,18 +52,21 @@ const FollowNotification = ({ dataNotification }: Props) => {
           height={40}
           className="object-cover rounded-full w-[40px] h-[40px]"
         />
-        <div>
-          <Link
-            href={`/${dataNotification.sourceUser?.username}`}
-            ref={childLink}
-            className="font-bold tracking-wide"
-          >
-            {dataNotification.sourceUser?.username}.
-          </Link>
-          <p>followed you</p>∙
-          <span className="font-normal text-gray-200">
-            {customDatePost(dataNotification.createdAt.getTime())}
-          </span>
+        <div className="notifications__component-body">
+          <div className="flex justify-start items-start gap-x-2">
+            <Link
+              href={`/${dataNotification.sourceUser?.username}`}
+              ref={childLink}
+              className="font-bold tracking-wide"
+            >
+              {dataNotification.sourceUser?.username}.
+            </Link>
+            <p>followed you</p>∙
+            <span className="font-normal text-gray-200">
+              {customDatePost(dataNotification.createdAt.getTime())}
+            </span>
+          </div>
+          {!dataNotification.isRead && <Unread />}
         </div>
       </div>
     </div>
