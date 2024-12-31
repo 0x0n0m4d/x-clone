@@ -9,7 +9,6 @@ import {
   UpdateUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
-import { getErrorMessage } from '@/lib/utils';
 
 export async function saveUserAction({
   id,
@@ -59,9 +58,6 @@ export async function saveUserAction({
     return newUser;
   } catch (error: any) {
     console.log('[ERROR_SAVE_USER_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -82,9 +78,6 @@ export async function getUserAction(id: string) {
     return result;
   } catch (error: any) {
     console.log('[ERROR_GET_USER]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -100,17 +93,6 @@ export async function getUsersAction({
 
     if (isOnSearch) {
       if (!searchQuery) return [];
-      const test = await prisma.user.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                equals: searchQuery
-              }
-            }
-          ]
-        }
-      });
       const users = await prisma.user.findMany({
         where: {
           id: {
@@ -176,9 +158,6 @@ export async function getUsersAction({
     return dataUsers;
   } catch (error: any) {
     console.log('[ERROR_GET_USERS_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -212,9 +191,6 @@ export async function updateUserAction({
     return updateUser;
   } catch (error) {
     console.log('[ERROR_UPDATE_USER_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '');
   }
@@ -234,9 +210,7 @@ export async function getUserByUsernameAction(username: string) {
 
     return user;
   } catch (error: any) {
-    return {
-      message: getErrorMessage(error)
-    };
+    console.info('[ERROR_GET_USER_BY_USERNAME_ACTION]', error);
   }
 }
 
@@ -272,9 +246,6 @@ export const toggleFollowUserAction = async ({
     return result;
   } catch (error: any) {
     console.log('[ERROR_TOGGLE_FOLLOWER_USER_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/home');
   }

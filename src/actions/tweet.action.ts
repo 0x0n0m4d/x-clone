@@ -9,7 +9,6 @@ import {
   ToggleLikeActionProps
 } from '@/interfaces/tweet.interface';
 import prisma from '@/lib/prismadb';
-import { getErrorMessage } from '@/lib/utils';
 
 export const createTweetAction = async ({
   userId,
@@ -46,9 +45,6 @@ export const createTweetAction = async ({
     return result;
   } catch (error: any) {
     console.log('[ERROR_CREATE_TWEET_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -95,9 +91,6 @@ export async function getTweetAction(id: string) {
     return result;
   } catch (error: any) {
     console.log('[ERROR_GET_TWEET_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -171,9 +164,6 @@ export async function getTweetsAction({
     return results;
   } catch (error: any) {
     console.log('[ERROR_GET_TWEETS_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -243,9 +233,6 @@ export async function getTweetsByUserIdAction(
     return tweets;
   } catch (error: any) {
     console.log('[ERROR_GET_TWEETS_BY_USER_ID_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -321,9 +308,6 @@ export async function deleteTweetAction(id: string, path: string) {
     return result;
   } catch (error: any) {
     console.log('[ERROR_DELETE_TWEET_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -363,9 +347,6 @@ export async function toggleLikeAction({
     return result;
   } catch (error: any) {
     console.log('[ERROR_TOGGLE_LIKE_TWEET_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -406,9 +387,6 @@ export async function getLikeTweetsByUserId(userId: string) {
     return tweets;
   } catch (error: any) {
     console.log('[ERROR_GET_LIKE_TWEETS]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -446,9 +424,6 @@ export async function toggleBookmarkAction({
     return result;
   } catch (error: any) {
     console.log('[ERROR_TOGGLE_BOOKMARK_TWEET_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/home');
   }
@@ -487,9 +462,6 @@ export async function getBookmarksAction(userId: string) {
     return tweets;
   } catch (error: any) {
     console.log('[ERROR_GET_BOOKMARKS_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   }
 }
 
@@ -504,9 +476,6 @@ export async function deleteBookmarksAction(userId: string, path: string) {
     return deleteBookmarks;
   } catch (error: any) {
     console.log('[ERROR_DELETE_BOOKMARKS_ACTION]', error);
-    return {
-      message: getErrorMessage(error)
-    };
   } finally {
     revalidatePath(path || '/bookmarks');
   }
