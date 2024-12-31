@@ -17,13 +17,13 @@ const Layout = async ({ children }: Props) => {
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
-  if (!user || 'message' in user) redirect('/');
+  if (!user) redirect('/');
 
   const isCompleted = user.isCompleted;
   if (!isCompleted) redirect('/onboarding');
 
   let users = await getUsersAction({ userId: user.id });
-  if (!users || 'message' in users) users = [];
+  if (!users?.length) users = [];
 
   return (
     <main className="max-h-screen overflow-hidden">

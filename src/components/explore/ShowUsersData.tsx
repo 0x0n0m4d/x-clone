@@ -26,7 +26,6 @@ const ShowUserData = ({ initialDataUsers: users, user }: Props) => {
       page: currentPage
     });
 
-    if ('message' in newDataUsers) return;
     if (!newDataUsers?.length) {
       setIsUsersDataMaxed(true);
       return;

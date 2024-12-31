@@ -15,11 +15,11 @@ const Page = async ({ searchParams }: Props) => {
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
-  if (!user || 'message' in user) redirect('/');
+  if (!user) redirect('/');
 
   const isFollowing = searchParams.filter === 'following';
   let tweets = await getTweetsAction({ userId: user.id, isFollowing });
-  if (!tweets || 'message' in tweets) tweets = [];
+  if (!tweets?.length) tweets = [];
 
   return tweets.map(tweet => (
     <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
