@@ -8,7 +8,10 @@ import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import * as z from 'zod';
-import { commentPostNotificationAction } from '@/actions/notification.action';
+import {
+  commentPostNotificationAction,
+  replyCommentPostNotificationAction
+} from '@/actions/notification.action';
 import { createTweetAction } from '@/actions/tweet.action';
 import {
   Form,
@@ -103,7 +106,10 @@ const CreateTweetForm = ({
       });
 
       if (dataTweet && dataTweet.parentId) {
-        await commentPostNotificationAction({
+        const notificationType = dataTweet.isParentIdExist
+          ? replyCommentPostNotificationAction
+          : commentPostNotificationAction;
+        await notificationType({
           userId: dataTweet.user.id,
           sourceId: userId,
           parentIdPost: dataTweet.id,
