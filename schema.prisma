@@ -26,8 +26,8 @@ model User {
   likes                   Like[]
   bookmarks               Bookmark[]
   notifications           Notifications[] @relation("UserNotifications")
-  sourceUserNotifications Notification[]  @relation("SourceUserNotifications")
-  parentUserNotifications Notification[]  @relation("ParentUserNotifications")
+  sourceUserNotifications Notifications[]  @relation("SourceUserNotifications")
+  parentUserNotifications Notifications[]  @relation("ParentUserNotifications")
 }
 
 model Follower {
@@ -38,7 +38,7 @@ model Follower {
   following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
 }
 
-model Notification { 
+model Notifications { 
   id           String   @id @default(uuid())
   userId       String
   title        String   @db.Char(50)
