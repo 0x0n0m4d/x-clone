@@ -34,7 +34,7 @@ const FollowNotification = ({ dataNotification }: Props) => {
     >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
-          src="/assets/profile-icon.svg"
+          src="/assets/user-notification-icon.svg"
           alt="Profile Icon"
           width={25}
           height={25}

@@ -37,11 +37,11 @@ const CommentNotification = ({ dataNotification }: Props) => {
     >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
-          src="/assets/comment-icon.svg"
+          src="/assets/comment-notification-icon.svg"
           alt="Comment Icon"
-          width={25}
-          height={25}
-          className="object-contain w-[25px] h-[25px"
+          width={22}
+          height={22}
+          className="object-contain w-[22px] h-[22px]"
         />
       </div>
       <div className="w-full flex flex-row items-center justify-between gap-x-8">

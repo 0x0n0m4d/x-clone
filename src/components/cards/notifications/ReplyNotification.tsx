@@ -43,11 +43,11 @@ const ReplyNotification = ({ dataNotification }: Props) => {
     >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
-          src="/assets/comment-icon.svg"
-          alt="Comment Icon"
-          width={25}
-          height={25}
-          className="object-contain w-[25px] h-[25px]"
+          src="/assets/reply-notification-icon.svg"
+          alt="Reply Icon"
+          width={20}
+          height={20}
+          className="object-contain w-[20px] h-[20px]"
         />
       </div>
       <div className="w-full flex flex-row items-center justify-between gap-x-8">
