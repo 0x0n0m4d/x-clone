@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
+import NotFound from '@/components/sharing/NotFound';
 
 interface Props {
   searchParams: {
@@ -21,9 +22,13 @@ const Page = async ({ searchParams }: Props) => {
   let tweets = await getTweetsAction({ userId: user.id, isFollowing });
   if (!tweets?.length) tweets = [];
 
-  return tweets.map(tweet => (
-    <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
-  ));
+  return tweets.length ? (
+    tweets.map(tweet => (
+      <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
+    ))
+  ) : (
+    <NotFound description="No posts can be displayd" />
+  );
 };
 
 export default Page;
