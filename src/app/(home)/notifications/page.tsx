@@ -7,7 +7,6 @@ import CommentNotification from '@/components/cards/notifications/CommentNotific
 import FollowNotification from '@/components/cards/notifications/FollowNotification';
 import LikeNotification from '@/components/cards/notifications/LikeNotification';
 import ReplyNotification from '@/components/cards/notifications/ReplyNotification';
-import Topbar from '@/components/notifications/Topbar';
 import { DataNotification } from '@/interfaces/notifications.interface';
 
 const Page = async () => {
@@ -34,7 +33,6 @@ const Page = async () => {
 
   return (
     <>
-      <Topbar />
       <section>
         {!notifications?.length
           ? null
