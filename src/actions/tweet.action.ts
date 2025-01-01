@@ -137,43 +137,45 @@ export async function getTweetsAction({
           skip,
           take: size
         });
-      } else {
-        if (isFollowing) {
-          return await prisma.thread.findMany({
-            where: {
-              parentId: null,
-              user: {
-                followers: {
-                  some: {
-                    followingId: userId
-                  }
-                }
-              }
-            },
+      }
+
+      return await prisma.thread.findMany({
+        where: {
+          parentId: null
+        },
+        include: {
+          user: {
             include: {
-              user: {
-                include: {
-                  followers: true,
-                  followings: true
-                }
-              },
-              bookmarks: true,
-              likes: true,
-              replies: {
-                select: {
-                  id: true
-                }
-              }
-            },
-            orderBy: {
-              createdAt: 'desc'
-            },
-            take: size
-          });
-        }
+              followers: true,
+              followings: true
+            }
+          },
+          bookmarks: true,
+          likes: true,
+          replies: {
+            select: {
+              id: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip,
+        take: size
+      });
+    } else {
+      if (isFollowing) {
         return await prisma.thread.findMany({
           where: {
-            parentId: null
+            parentId: null,
+            user: {
+              followers: {
+                some: {
+                  followingId: userId
+                }
+              }
+            }
           },
           include: {
             user: {
@@ -196,9 +198,34 @@ export async function getTweetsAction({
           take: size
         });
       }
+
+      return await prisma.thread.findMany({
+        where: {
+          parentId: null
+        },
+        include: {
+          user: {
+            include: {
+              followers: true,
+              followings: true
+            }
+          },
+          bookmarks: true,
+          likes: true,
+          replies: {
+            select: {
+              id: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: size
+      });
     }
-  } catch (error: any) {
-    console.log('[ERROR_GET_TWEETS_ACTION]', error);
+  } catch (error) {
+    console.log('[GET_TWEETS_ACTION]', error);
   }
 }
 

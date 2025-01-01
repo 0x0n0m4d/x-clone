@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTabsPosts } from '@/hooks/useTabsPosts';
 import { UserWithFollowers } from '@/interfaces/user.interface';
@@ -11,43 +12,27 @@ import MobileSidebar from './MobileSidebar';
 
 interface TabsProps {
   title: string;
+  href: string;
 }
 interface TopbarProps {
   user: UserWithFollowers;
 }
 
-const Tabs = ({ title }: TabsProps) => {
-  const router = useRouter();
+const Tabs = ({ title, href }: TabsProps) => {
+  const path = usePathname();
   const tabsPosts = useTabsPosts();
-  const searchParams = useSearchParams();
-
-  const isFollowing = searchParams.get('filter') === 'following';
 
   useEffect(() => {
-    if (isFollowing) tabsPosts.setStatus('Following');
-  }, []);
+    if (path === '/home/following') tabsPosts.setStatus('Following');
+    else tabsPosts.setStatus('For You');
+  }, [path]);
 
   const isTitleEqualToStatus = title === tabsPosts.status;
 
-  const handleSearchParams = () => {
-    const isStatusFollowing = tabsPosts.status === 'Following';
-
-    if (tabsPosts.status === title) return;
-
-    if (!isStatusFollowing) {
-      tabsPosts.setStatus('Following');
-      router.push('/home?filter=following');
-      return;
-    }
-
-    tabsPosts.setStatus('For You');
-    router.push('/home');
-  };
-
   return (
-    <div
+    <Link
       className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
-      onClick={handleSearchParams}
+      href={href}
     >
       <p
         className={cn(
@@ -59,7 +44,7 @@ const Tabs = ({ title }: TabsProps) => {
       >
         {title}
       </p>
-    </div>
+    </Link>
   );
 };
 
@@ -86,8 +71,8 @@ const Topbar = ({ user }: TopbarProps) => {
         </h2>
       </div>
       <div className="flex justify-evenly">
-        <Tabs title="For You" />
-        <Tabs title="Following" />
+        <Tabs title="For You" href="/home" />
+        <Tabs title="Following" href="/home/following" />
       </div>
     </nav>
   );
