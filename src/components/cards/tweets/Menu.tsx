@@ -46,6 +46,18 @@ const Menu = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPendingTweet, startTransitionTweet] = useTransition();
   const [isPendingFollowUser, startTransitionFollowUser] = useTransition();
+
+  const deleteTweetHandler = () => {
+    deleteTweet({
+      isPending: isPendingTweet,
+      startTransition: startTransitionTweet,
+      toast,
+      path,
+      id: tweetId
+    });
+
+    setIsDialogOpen(false);
+  };
   return (
     <>
       <DropdownMenu>
@@ -98,15 +110,7 @@ const Menu = ({
           <Button
             variant="primary"
             className="bg-red-600 hover:bg-red-600/90 rounded-full font-extrabold text-sm"
-            onClick={() =>
-              deleteTweet({
-                isPending: isPendingTweet,
-                startTransition: startTransitionTweet,
-                toast,
-                path,
-                id: tweetId
-              })
-            }
+            onClick={deleteTweetHandler}
             disabled={isPendingTweet}
           >
             Delete
