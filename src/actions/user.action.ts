@@ -221,31 +221,42 @@ export const toggleFollowUserAction = async ({
 }: ToggleFollowUserActionProps) => {
   try {
     if (userId && !currentUserId) {
-      const result = await prisma.follower.delete({
-        where: { followerId: userId }
+      const existingUser = await prisma.follower.findFirst({
+        where: {
+          followerId: userId
+        }
       });
 
-      if (!result) return;
+      if (!existingUser) return;
 
-      return result;
+      return await prisma.follower.delete({
+        where: {
+          id: existingUser.id
+        }
+      });
     }
 
-    if (!userId) throw new Error('userId required');
-    if (!currentUserId) throw new Error('currentUserId required');
+    if (!userId) throw new Error('userId requided');
+    if (!currentUserId) throw new Error('currentUserId requided');
 
-    const result = await prisma.follower.create({
-      data: {
+    const existingUser = await prisma.follower.findFirst({
+      where: {
         followerId: userId,
         followingId: currentUserId
       }
     });
 
-    if (!result) return;
+    if (existingUser) return;
 
-    return result;
+    return await prisma.follower.create({
+      data: {
+        followerId: userId,
+        followingId: currentUserId
+      }
+    });
   } catch (error: any) {
     console.log('[ERROR_TOGGLE_FOLLOWER_USER_ACTION]', error);
   } finally {
-    revalidatePath(path || '/home');
+    revalidatePath(path);
   }
 };
