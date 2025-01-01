@@ -11,9 +11,14 @@ import Loading from '../sharing/Loading';
 interface Props {
   initialDataNotifications: DataNotification[];
   userId: string;
+  currentUsername: string;
 }
 
-const ShowNotificationsData = ({ initialDataNotifications, userId }: Props) => {
+const ShowNotificationsData = ({
+  initialDataNotifications,
+  userId,
+  currentUsername
+}: Props) => {
   const [dataNotifications, setDataNotifications] = useState(
     initialDataNotifications
   );
@@ -56,7 +61,12 @@ const ShowNotificationsData = ({ initialDataNotifications, userId }: Props) => {
 
     const options: any = {
       User: <UserNotification dataNotification={data} />,
-      Post: <PostNotification dataNotification={data} />
+      Post: (
+        <PostNotification
+          dataNotification={data}
+          currentUsername={currentUsername}
+        />
+      )
     };
 
     return options[data.parentType];

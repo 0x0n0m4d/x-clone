@@ -17,6 +17,7 @@ const Page = async () => {
     <ShowNotificationsData
       initialDataNotifications={notifications!}
       userId={user.id}
+      currentUsername={user.username}
     />
   );
 };

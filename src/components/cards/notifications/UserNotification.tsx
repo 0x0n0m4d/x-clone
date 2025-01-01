@@ -1,6 +1,6 @@
 'use client';
 
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
@@ -15,19 +15,25 @@ interface Props {
 
 const UserNotification = ({ dataNotification }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
   const path = usePathname();
 
-  const handleNavigation = async (
+  const handleNavigation = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
     e.stopPropagation();
 
-    if (!dataNotification.isRead)
-      await markAsReadNotification(dataNotification.id, path);
-    router.push(
-      `/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`
-    );
+    if (isPending) return;
+
+    window.location.href = `/${dataNotification.sourceUser?.username}`;
+
+    if (!dataNotification.isRead) {
+      startTransition(() => {
+        markAsReadNotification(dataNotification.id, path);
+      });
+    }
   };
 
   const redirectToSourceId = (
