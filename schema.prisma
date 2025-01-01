@@ -56,8 +56,6 @@ model Notification {
   sourceUser   User        @relation("SourceUserNotifications", fields: [sourceId], references: [id], onDelete: Cascade)
   parentUser   User?       @relation("ParentUserNotifications", fields: [parentIdUser], references: [id], onDelete: Cascade)
   post         Thread?     @relation("PostNotifications", fields: [parentIdPost], references: [id], onDelete: Cascade)
-
-  @@index([userId, threadId])
 }
 
 model Thread {
@@ -81,6 +79,8 @@ model Like {
   threadId String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread   Thread @relation("PostLikes", fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([userId, threadId])
 }
 
 model Bookmark {
