@@ -31,7 +31,7 @@ const Lists = ({ username, totalNotifications }: Props) => {
             key={link.title}
             className={cn(
               'w-fit rounded-full overflow-hidden',
-              isSamePath && 'bg-black-200 font-bold'
+              isSamePath && 'font-bold'
             )}
           >
             <Link
@@ -40,7 +40,7 @@ const Lists = ({ username, totalNotifications }: Props) => {
             >
               <div className="relative">
                 <Image
-                  src={link.icon}
+                  src={isSamePath ? link.activeIcon : link.icon}
                   alt={link.title}
                   width={30}
                   height={30}
