@@ -40,6 +40,12 @@ const ShowNotificationsData = ({ initialDataNotifications, userId }: Props) => {
   };
 
   useEffect(() => {
+    setDataNotifications(initialDataNotifications);
+    setIsNotificationDataMaxed(false);
+    setCurrentPage(1);
+  }, [initialDataNotifications]);
+
+  useEffect(() => {
     if (inView) {
       loadMoreDataNotifications();
     }
