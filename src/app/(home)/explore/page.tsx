@@ -2,8 +2,6 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
 import ShowUserData from '@/components/explore/ShowUsersData';
-import Topbar from '@/components/explore/Topbar';
-import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 
 const Page = async () => {
   const clerkUser = await currentUser();
@@ -21,8 +19,6 @@ const Page = async () => {
 
   return (
     <>
-      <ButtonCreatePostMobile />
-      <Topbar user={user} />
       <ShowUserData initialDataUsers={users!} user={user} />
     </>
   );
