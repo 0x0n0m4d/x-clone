@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import TweetText from '@/components/sharing/TweetText';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import {
@@ -90,7 +91,9 @@ const Tweets = ({ tweet, userId }: Props) => {
                 @{tweet.user.username} · {formattedCreatedAt}
               </p>
             </div>
-            <p className="whitespace-break-spaces">{renderText(tweet.text)}</p>
+            <p className="whitespace-break-spaces">
+              <TweetText content={renderText(tweet.text)} />
+            </p>
           </div>
           <div>
             <Menu

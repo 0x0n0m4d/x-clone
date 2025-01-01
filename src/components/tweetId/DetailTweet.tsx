@@ -13,6 +13,7 @@ import {
 import { renderText } from '@/lib/tweet';
 import { formatDateTime } from '@/lib/utils';
 import { Bookmark, Comment, Like, Menu, Share } from '../cards/tweets';
+import TweetText from '../sharing/TweetText';
 
 interface Props {
   tweet: SingleTweetWithConnection;
@@ -115,7 +116,9 @@ const DetailTweet = ({ tweet, userId }: Props) => {
       </section>
       <section className="flex-1 flex flex-col space-y-10">
         <div className="flex flex-col space-y-3">
-          <p className="whitespace-break-spaces">{renderText(tweet.text)}</p>
+          <p className="whitespace-break-spaces">
+            <TweetText content={renderText(tweet.text)} />
+          </p>
           {displayTweetImage()}
           <p className="font-normal text-gray-200">
             {formatDateTime(tweet.createdAt)}
