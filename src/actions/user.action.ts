@@ -260,3 +260,67 @@ export const toggleFollowUserAction = async ({
     revalidatePath(path);
   }
 };
+
+// create fake user data
+export const createManyUser = async () => {
+  await prisma.user.createMany({
+    data: [
+      {
+        id: '3fb1263a-f92e-4a04-a678-cb5f7acfc0b5',
+        name: 'Gustavo Bughi',
+        username: 'bughi',
+        email: 'bughi@example.com',
+        imageUrl: 'bughi.jpg',
+        bannerUrl: 'banner_bughi.jpg',
+        location: 'New York',
+        website: 'www.bughi.com',
+        bio: "Hello, I'm Gustavo Bughi."
+      },
+      {
+        id: 'd5e04c90-8d14-43a9-850d-0a4ebe9e24dd',
+        name: 'Johnatan Moura',
+        username: 'johny',
+        email: 'johny@example.com',
+        imageUrl: 'johny.jpg',
+        bannerUrl: 'banner_johny.jpg',
+        location: 'Los Angeles',
+        website: 'www.johny.com',
+        bio: "Hi there, I'm Johny."
+      },
+      {
+        id: '14b2a6a6-22a4-4ca1-8964-9b88a34d9df2',
+        name: 'Lucas Rodrigues',
+        username: 'nomad',
+        email: 'nomad@example.com',
+        imageUrl: 'nomad.jpg',
+        bannerUrl: 'banner_nomad.jpg',
+        location: 'New York',
+        website: 'www.nomad.com',
+        bio: '( ._.) ERROR: 404 Not Found'
+      },
+      {
+        id: '9a1b1406-422a-4bc5-8ea0-4af286f3b4ce',
+        name: 'Breno Zambanini',
+        username: 'zamba',
+        email: 'zamba@example.com',
+        imageUrl: 'zamba.jpg',
+        bannerUrl: 'banner_zamba.jpg',
+        location: 'Phoenix',
+        website: 'www.zamba.com',
+        bio: 'Hello.'
+      },
+      {
+        id: '76878ac9-c09e-4e87-86ea-1a9a273207bf',
+        name: 'Unknown',
+        username: 'O_o',
+        email: 'inexistent@example.com',
+        imageUrl: 'exist.jpg',
+        bannerUrl: 'banner_exist.jpg',
+        location: 'Brooklyn',
+        website: 'www.unknown.com',
+        bio: 'There nothing in here'
+      }
+    ],
+    skipDuplicates: true
+  });
+};
