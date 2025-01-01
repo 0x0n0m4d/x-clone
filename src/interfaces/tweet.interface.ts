@@ -93,8 +93,7 @@ export interface ToggleLikeActionProps {
 }
 
 export interface ToggleBookmarkActionProps {
-  bookmarkId?: string;
-  userId?: string;
-  threadId?: string;
+  userId: string;
+  threadId: string;
   path: string;
 }

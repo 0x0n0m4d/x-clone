@@ -446,37 +446,30 @@ export async function getLikeTweetsByUserId(userId: string) {
 }
 
 export async function toggleBookmarkAction({
-  bookmarkId = '',
-  userId,
-  threadId,
+  userId = '',
+  threadId = '',
   path
 }: ToggleBookmarkActionProps) {
   try {
-    const exits = await prisma.bookmark.findUnique({
-      where: { id: bookmarkId }
-    });
-
-    if (exits) {
-      const result = await prisma.bookmark.delete({
-        where: { id: bookmarkId }
-      });
-
-      return result;
-    }
-
-    if (!userId) throw new Error('userId required');
-    if (!threadId) throw new Error('threadId required');
-
-    const result = await prisma.bookmark.create({
-      data: {
+    const existingBookmark = await prisma.bookmark.findFirst({
+      where: {
         userId,
         threadId
       }
     });
 
-    if (!result) return;
+    if (existingBookmark) {
+      return await prisma.bookmark.delete({
+        where: { id: existingBookmark.id }
+      });
+    }
 
-    return result;
+    return await prisma.bookmark.create({
+      data: {
+        userId,
+        threadId
+      }
+    });
   } catch (error: any) {
     console.log('[ERROR_TOGGLE_BOOKMARK_TWEET_ACTION]', error);
   } finally {
