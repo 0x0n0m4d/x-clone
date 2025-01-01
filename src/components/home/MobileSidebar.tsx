@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { mobileSidebarLinks } from '@/constants';
 import { UserWithFollowers } from '@/interfaces/user.interface';
-import { cn } from '@/lib/utils';
 import {
   Accordion,
   AccordionContent,
@@ -67,16 +66,13 @@ const MobileSidebar = ({ user }: Props) => {
             const isSamePath = link.href === pathname;
 
             return (
-              <li
-                key={link.title}
-                className={cn('w-full', isSamePath && 'bg-black-200')}
-              >
+              <li key={link.title} className="w-full">
                 <Link
                   href={link.href}
                   className="flex w-full flex-row items-center gap-x-6 tracking-wider text-xl font-bold p-3 hover:bg-black-200 transition-all"
                 >
                   <Image
-                    src={link.icon}
+                    src={isSamePath ? link.activeIcon : link.icon}
                     alt={link.title}
                     width={23}
                     height={23}
