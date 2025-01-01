@@ -1,6 +1,6 @@
 'use client';
 
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const UserNotification = ({ dataNotification }: Props) => {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const path = usePathname();
 
@@ -36,6 +37,12 @@ const UserNotification = ({ dataNotification }: Props) => {
 
     router.push(`/${dataNotification.sourceUser?.username}`);
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  });
+
+  if (!isMounted) return null;
 
   return (
     <div
