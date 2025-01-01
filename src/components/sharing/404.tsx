@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 
 const NotFound = () => {
   return (
-    <div className="p-3 space-y-32">
+    <div className="p-3 space-y-20">
       <div>
         <Button
           className="rounded-full hover:bg-gray-300/50 transition"
