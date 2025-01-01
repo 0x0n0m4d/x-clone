@@ -2,12 +2,12 @@
 
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
 import { DataNotification } from '@/interfaces/notifications.interface';
 import { renderText } from '@/lib/tweet';
 import { customDatePost } from '@/lib/utils';
+import Menu from './Menu';
 import Unread from './Unread';
 
 interface Props {
@@ -19,18 +19,26 @@ const PostNotification = ({ dataNotification }: Props) => {
 
   const router = useRouter();
   const path = usePathname();
-  const childLink = useRef<HTMLAnchorElement | null>(null);
+  const menuFeed = useRef<HTMLDivElement | null>(null);
 
   const handleNavigation = async (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
-    if (e.target! == childLink.current) {
-      if (!dataNotification.isRead)
-        await markAsReadNotification(dataNotification.id, path);
-      router.push(
-        `/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`
-      );
-    }
+    e.stopPropagation();
+
+    if (!dataNotification.isRead)
+      await markAsReadNotification(dataNotification.id, path);
+    router.push(
+      `/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`
+    );
+  };
+
+  const redirectToSourceId = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    router.push(`/${dataNotification.sourceUser?.username}`);
   };
 
   const showActivityImage = (activityType: string) => {
@@ -100,13 +108,12 @@ const PostNotification = ({ dataNotification }: Props) => {
             className="object-cover rounded-full w-[40px] h-[40px]"
           />
           <div className="flex justify-start items-start flex-wrap gap-x-2">
-            <Link
-              href={`/${dataNotification.sourceUser?.username}`}
-              ref={childLink}
+            <h5
+              onClick={redirectToSourceId}
               className="font-bold tracking-wide"
             >
               {dataNotification.sourceUser?.username}
-            </Link>
+            </h5>
             <p>{showActivityText(dataNotification.activityType ?? '')}</p>∙
             <p className="font-normal text-gray-200">
               {customDatePost(dataNotification.createdAt.getTime())}
@@ -129,8 +136,12 @@ const PostNotification = ({ dataNotification }: Props) => {
             )}
           </div>
         </div>
-        <div className="flex justify-end items-start">
+        <div ref={menuFeed} className="flex justify-end items-start">
           {!dataNotification.isRead && <Unread />}
+          <Menu
+            isRead={dataNotification.isRead}
+            notificationId={dataNotification.id}
+          />
         </div>
       </div>
     </div>

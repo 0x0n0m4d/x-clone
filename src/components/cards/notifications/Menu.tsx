@@ -2,7 +2,6 @@
 
 import { MouseEvent, useTransition } from 'react';
 import { BookX, MoreHorizontal, Trash } from 'lucide-react';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
 import {
