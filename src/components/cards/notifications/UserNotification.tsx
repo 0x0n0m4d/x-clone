@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
 import { DataNotification } from '@/interfaces/notifications.interface';
 import { customDatePost } from '@/lib/utils';
+import Menu from './Menu';
 import Unread from './Unread';
 
 interface Props {
@@ -50,17 +51,18 @@ const UserNotification = ({ dataNotification }: Props) => {
           className="object-contain w-[25px] h-[25px]"
         />
       </div>
-      <div className="flex flex-col space-y-2">
-        <Image
-          src={
-            dataNotification.sourceUser?.imageUrl ?? '/assets/small-x-logo.svg'
-          }
-          alt={dataNotification.sourceUser?.username ?? 'Logo Twitter'}
-          width={40}
-          height={40}
-          className="object-cover rounded-full w-[40px] h-[40px]"
-        />
-        <div className="notifications__component-body">
+      <div className="notifications__component-body">
+        <div className="flex flex-col space-y-2">
+          <Image
+            src={
+              dataNotification.sourceUser?.imageUrl ??
+              '/assets/small-x-logo.svg'
+            }
+            alt={dataNotification.sourceUser?.username ?? 'Logo Twitter'}
+            width={40}
+            height={40}
+            className="object-cover rounded-full w-[40px] h-[40px]"
+          />
           <div className="flex justify-start items-start gap-x-2">
             <h5
               onClick={redirectToSourceId}
@@ -73,9 +75,13 @@ const UserNotification = ({ dataNotification }: Props) => {
               {customDatePost(dataNotification.createdAt.getTime())}
             </span>
           </div>
-          <div className="flex justify-end items-start">
-            {!dataNotification.isRead && <Unread />}
-          </div>
+        </div>
+        <div className="flex justify-end items-start">
+          {!dataNotification.isRead && <Unread />}
+          <Menu
+            notificationId={dataNotification.id}
+            isRead={dataNotification.isRead}
+          />
         </div>
       </div>
     </div>
