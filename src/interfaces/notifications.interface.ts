@@ -24,6 +24,12 @@ export interface DataNotification {
   post: Post | null;
 }
 
+export interface GetNotificationActionProps {
+  userId: string;
+  size?: number;
+  page?: number;
+}
+
 interface ParentTypeUserProps {
   userId: string;
   sourceId: string;

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import {
   CommentPostNotificationActionProps,
   FollowUserNotificationActionProps,
+  GetNotificationActionProps,
   LikePostNotificationActionProps,
   ReplyCommentPostNotificationActionProps
 } from '@/interfaces/notifications.interface';
@@ -116,10 +117,41 @@ export const replyCommentPostNotificationAction = async ({
   }
 };
 
-export const getNotifications = async (userId: string) => {
-  if (!userId) throw new Error('userId required');
-
+export const getNotifications = async ({
+  userId,
+  size = 20,
+  page = 0
+}: GetNotificationActionProps) => {
   try {
+    if (!userId) throw new Error('userId required');
+
+    const skip = size * page;
+    if (skip) {
+      return await prisma.notification.findMany({
+        where: { userId },
+        include: {
+          sourceUser: {
+            select: {
+              id: true,
+              username: true,
+              imageUrl: true
+            }
+          },
+          post: {
+            select: {
+              id: true,
+              text: true,
+              imageUrl: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip,
+        take: size
+      });
+    }
     return await prisma.notification.findMany({
       where: { userId },
       include: {
@@ -140,7 +172,8 @@ export const getNotifications = async (userId: string) => {
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      take: size
     });
   } catch (error) {
     console.info('[ERROR_GET_NOTIFICATIONS]', error);
