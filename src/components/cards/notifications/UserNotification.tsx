@@ -1,8 +1,7 @@
 'use client';
 
-import { MouseEvent, useRef } from 'react';
+import { MouseEvent } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
 import { DataNotification } from '@/interfaces/notifications.interface';
@@ -16,16 +15,25 @@ interface Props {
 const UserNotification = ({ dataNotification }: Props) => {
   const router = useRouter();
   const path = usePathname();
-  const childLink = useRef<HTMLAnchorElement | null>(null);
 
   const handleNavigation = async (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
-    if (e.target !== childLink.current) {
-      if (!dataNotification.isRead)
-        await markAsReadNotification(dataNotification.id, path);
-      router.push(`/${dataNotification.sourceUser?.username}`);
-    }
+    e.stopPropagation();
+
+    if (!dataNotification.isRead)
+      await markAsReadNotification(dataNotification.id, path);
+    router.push(
+      `/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`
+    );
+  };
+
+  const redirectToSourceId = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+
+    router.push(`/${dataNotification.sourceUser?.username}`);
   };
 
   return (
@@ -54,13 +62,12 @@ const UserNotification = ({ dataNotification }: Props) => {
         />
         <div className="notifications__component-body">
           <div className="flex justify-start items-start gap-x-2">
-            <Link
-              href={`/${dataNotification.sourceUser?.username}`}
-              ref={childLink}
+            <h5
+              onClick={redirectToSourceId}
               className="font-bold tracking-wide"
             >
               {dataNotification.sourceUser?.username}.
-            </Link>
+            </h5>
             <p>followed you</p>∙
             <span className="font-normal text-gray-200">
               {customDatePost(dataNotification.createdAt.getTime())}
