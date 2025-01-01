@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { getNotifications } from '@/actions/notification.action';
 import { getUserAction, getUsersAction } from '@/actions/user.action';
 import Modal from '@/components/modals/Modal';
 import Bottombar from '@/components/sharing/Bottombar';
@@ -25,6 +26,11 @@ const Layout = async ({ children }: Props) => {
   let users = await getUsersAction({ userId: user.id });
   if (!users?.length) users = [];
 
+  let notifications = await getNotifications(user.id);
+  notifications = notifications?.filter(
+    notification => notification.isRead === false
+  );
+
   return (
     <main className="max-h-screen overflow-hidden">
       <Modal imageUrl={user.imageUrl} userId={user.id} />
@@ -33,6 +39,7 @@ const Layout = async ({ children }: Props) => {
           username={user.username}
           name={user.name}
           imageUrl={user.imageUrl}
+          totalNotifications={notifications?.length ?? 0}
         />
         <section className="w-full hide-scrollbar max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0">
           {children}
