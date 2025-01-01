@@ -3,10 +3,8 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getNotifications } from '@/actions/notification.action';
 import { getUserAction } from '@/actions/user.action';
-import CommentNotification from '@/components/cards/notifications/CommentNotification';
-import FollowNotification from '@/components/cards/notifications/FollowNotification';
-import LikeNotification from '@/components/cards/notifications/LikeNotification';
-import ReplyNotification from '@/components/cards/notifications/ReplyNotification';
+import PostNotification from '@/components/cards/notifications/PostNotification';
+import UserNotification from '@/components/cards/notifications/UserNotification';
 import { DataNotification } from '@/interfaces/notifications.interface';
 
 const Page = async () => {
@@ -22,13 +20,11 @@ const Page = async () => {
     if (!data?.activityType) return;
 
     const options: any = {
-      Follow: <FollowNotification dataNotification={data} />,
-      Like: <LikeNotification dataNotification={data} />,
-      Comment: <CommentNotification dataNotification={data} />,
-      Reply: <ReplyNotification dataNotification={data} />
+      Follow: <UserNotification dataNotification={data} />,
+      Like: <PostNotification dataNotification={data} />
     };
 
-    return options[data.activityType];
+    return options[data.parentType];
   };
 
   return (

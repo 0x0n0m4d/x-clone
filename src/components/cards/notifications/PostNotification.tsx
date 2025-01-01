@@ -14,7 +14,7 @@ interface Props {
   dataNotification: DataNotification;
 }
 
-const ReplyNotification = ({ dataNotification }: Props) => {
+const PostNotification = ({ dataNotification }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
@@ -33,6 +33,47 @@ const ReplyNotification = ({ dataNotification }: Props) => {
     }
   };
 
+  const showActivityImage = (activityType: string) => {
+    const options: any = {
+      Reply: (
+        <Image
+          src="/assets/reply-notification-icon.svg"
+          alt="Reply Icon"
+          width={20}
+          height={20}
+        />
+      ),
+      Comment: (
+        <Image
+          src="/assets/comment-notification-icon.svg"
+          alt="Comment Icon"
+          width={20}
+          height={20}
+        />
+      ),
+      Like: (
+        <Image
+          src="/assets/heart-fill-icon.svg"
+          alt="Heart Fill Icon"
+          width={20}
+          height={20}
+        />
+      )
+    };
+
+    return options[activityType];
+  };
+
+  const showActivityText = (activityType: string) => {
+    const options: any = {
+      Reply: 'replied your Comment',
+      Comment: 'commented on your Tweet',
+      Like: 'liked your Tweet'
+    };
+
+    return options[activityType];
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -44,13 +85,7 @@ const ReplyNotification = ({ dataNotification }: Props) => {
       className="notifications__component"
     >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
-        <Image
-          src="/assets/reply-notification-icon.svg"
-          alt="Reply Icon"
-          width={20}
-          height={20}
-          className="object-contain w-[20px] h-[20px]"
-        />
+        {showActivityImage(dataNotification.activityType ?? '')}
       </div>
       <div className="notifications__component-body">
         <div className="flex flex-col space-y-2 flex-1">
@@ -72,7 +107,7 @@ const ReplyNotification = ({ dataNotification }: Props) => {
             >
               {dataNotification.sourceUser?.username}
             </Link>
-            <p>replied your Tweet</p>∙
+            <p>{showActivityText(dataNotification.activityType ?? '')}</p>∙
             <p className="font-normal text-gray-200">
               {customDatePost(dataNotification.createdAt.getTime())}
             </p>
@@ -94,10 +129,12 @@ const ReplyNotification = ({ dataNotification }: Props) => {
             )}
           </div>
         </div>
-        {!dataNotification.isRead && <Unread />}
+        <div className="flex justify-end items-start">
+          {!dataNotification.isRead && <Unread />}
+        </div>
       </div>
     </div>
   );
 };
 
-export default ReplyNotification;
+export default PostNotification;
