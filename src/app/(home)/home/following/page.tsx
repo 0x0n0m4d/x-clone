@@ -12,8 +12,12 @@ const Page = async () => {
   const user = await getUserAction(clerkUser.id);
   if (!user) redirect('/');
 
-  const isFollowing = false;
-  let tweets = await getTweetsAction({ userId: user.id, isFollowing });
+  const isFollowing = true;
+
+  let tweets = await getTweetsAction({
+    userId: user.id,
+    isFollowing
+  });
   if (!tweets?.length) tweets = [];
 
   return (
