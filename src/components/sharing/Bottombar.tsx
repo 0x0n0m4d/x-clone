@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { linksMobile } from '@/constants';
-import { cn } from '@/lib/utils';
 
 interface Props {
   username: string;
@@ -25,16 +24,13 @@ const Bottombar = ({ username }: Props) => {
                 className="flex flex-col items-center space-y-2"
               >
                 <Image
-                  src={link.icon}
+                  src={
+                    isSamePath || isOnStatusPost ? link.activeIcon : link.icon
+                  }
                   alt={link.title}
                   width={25}
                   height={25}
-                  className={cn(
-                    'object-contain transition-all',
-                    isSamePath || isOnStatusPost
-                      ? 'w-[28px] h-[28px]'
-                      : 'w-[25px] h-[25px]'
-                  )}
+                  className="object-contain transition-all"
                 />
               </Link>
             </li>
