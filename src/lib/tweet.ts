@@ -84,7 +84,8 @@ export const toggleLikeTweet = ({
   startTransition(() => {
     if (liked) {
       toggleLikeAction({
-        likeId: liked.id,
+        userId: currentUserId,
+        threadId,
         path
       });
     } else {
@@ -93,6 +94,7 @@ export const toggleLikeTweet = ({
         threadId,
         path
       });
+      if (liked || currentUserId === userId) return;
       likePostNotificationAction({
         userId,
         sourceId: currentUserId,
