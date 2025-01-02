@@ -93,7 +93,7 @@ export async function getUsersAction({
 
     if (isOnSearch) {
       if (!searchQuery) return [];
-      await prisma.user.findMany({
+      return await prisma.user.findMany({
         where: {
           id: {
             not: userId

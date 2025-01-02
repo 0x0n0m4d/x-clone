@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { User } from '@prisma/client';
 import { getUsersAction } from '@/actions/user.action';
@@ -16,29 +16,47 @@ interface Props {
 const ShowUserData = ({ initialDataUsers: users, user }: Props) => {
   const [dataUsers, setDataUsers] = useState(users);
   const [isUsersDataMaxed, setIsUsersDataMaxed] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sectionLoadingRef, inView] = useInView();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isPending, setIsPending] = useState(false);
+  const [_, startTransition] = useTransition();
+  const [ref, inView] = useInView();
 
   const loadMoreDataUsers = async () => {
-    const newDataUsers = await getUsersAction({
-      userId: user.id,
-      size: 20,
-      page: currentPage
-    });
+    try {
+      if (currentPage === 0) {
+        return startTransition(() => {
+          setCurrentPage((prev: number) => prev + 1);
+        });
+      }
+      setIsPending(true);
 
-    if (!newDataUsers?.length) {
-      setIsUsersDataMaxed(true);
-      return;
+      const newDataUsers = await getUsersAction({
+        userId: user.id,
+        size: 20,
+        page: currentPage
+      });
+
+      startTransition(() => {
+        if (!newDataUsers?.length) {
+          return setIsUsersDataMaxed(true);
+        }
+
+        setDataUsers((prev: User[] | null) => [
+          ...(prev?.length ? prev : []),
+          ...newDataUsers
+        ]);
+        setCurrentPage(prev => prev + 1);
+      });
+    } catch (error) {
+      console.info('[ERROR_LOAD_MORE_DATA_USERS]', error);
+    } finally {
+      setIsPending(false);
     }
-
-    setDataUsers((prev: User[] | null) => [
-      ...(prev?.length ? prev : []),
-      ...newDataUsers
-    ]);
-    setCurrentPage(currentPage + 1);
   };
 
   useEffect(() => {
+    if (isPending) return;
+
     if (inView) {
       loadMoreDataUsers();
     }
@@ -71,7 +89,7 @@ const ShowUserData = ({ initialDataUsers: users, user }: Props) => {
         ))}
       </ul>
       {!isUsersDataMaxed && (
-        <section ref={sectionLoadingRef}>
+        <section ref={ref}>
           <Loading />
         </section>
       )}

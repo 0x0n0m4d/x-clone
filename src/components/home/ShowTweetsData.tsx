@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { DetailedTweet } from '@/interfaces/tweet.interface';
@@ -23,27 +23,44 @@ const ShowTweetsData = ({
   const [dataTweets, setDataTweets] = useState(initialDataTweets);
 
   const [isTweetDataMaxed, setIsTweetDataMaxed] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sectionLoadingRef, inView] = useInView();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [ref, inView] = useInView();
+
+  const [_, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const loadMoreDataTweets = async () => {
-    const newDataTweets = await getTweetsAction({
-      userId,
-      page: currentPage,
-      isFollowing,
-      parentId
-    });
+    try {
+      if (currentPage === 0) {
+        return startTransition(() => {
+          setCurrentPage((prev: number) => prev + 1);
+        });
+      }
+      setIsPending(true);
 
-    if (!newDataTweets?.length) {
-      setIsTweetDataMaxed(true);
-      return;
+      const newDataTweets = await getTweetsAction({
+        userId,
+        page: currentPage,
+        isFollowing,
+        parentId
+      });
+
+      startTransition(() => {
+        if (!newDataTweets?.length) {
+          return setIsTweetDataMaxed(true);
+        }
+
+        setDataTweets((prev: DetailedTweet[] | null) => [
+          ...(prev?.length ? prev : []),
+          ...newDataTweets
+        ]);
+        setCurrentPage(prev => prev + 1);
+      });
+    } catch (error) {
+      console.info('[ERROR_LOAD_MORE_DATA_TWEETS]', error);
+    } finally {
+      setIsPending(false);
     }
-
-    setDataTweets((prev: DetailedTweet[] | null) => [
-      ...(prev?.length ? prev : []),
-      ...newDataTweets
-    ]);
-    setCurrentPage(page => page + 1);
   };
 
   useEffect(() => {
@@ -53,22 +70,26 @@ const ShowTweetsData = ({
   }, [initialDataTweets]);
 
   useEffect(() => {
+    if (isPending) return;
+
     if (inView) {
       loadMoreDataTweets();
     }
   }, [inView]);
 
   return (
-    <>
-      {dataTweets?.map(tweet => (
-        <Tweets key={tweet.id} tweet={tweet} userId={userId} />
-      ))}
-      {!isTweetDataMaxed && (
-        <section ref={sectionLoadingRef}>
-          <Loading />
-        </section>
-      )}
-    </>
+    dataTweets?.length && (
+      <>
+        {dataTweets?.map(tweet => (
+          <Tweets key={tweet.id} tweet={tweet} userId={userId} />
+        ))}
+        {!isTweetDataMaxed && (
+          <section ref={ref}>
+            <Loading />
+          </section>
+        )}
+      </>
+    )
   );
 };
 
