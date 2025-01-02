@@ -6,17 +6,14 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import {
-  DataTweet,
-  SingleTweetWithConnection
-} from '@/interfaces/tweet.interface';
+import { DataTweet, DetailedTweet } from '@/interfaces/tweet.interface';
 import { renderText } from '@/lib/tweet';
 import { formatDateTime } from '@/lib/utils';
 import { Bookmark, Comment, Like, Menu, Share } from '../cards/tweets';
 import TweetText from '../sharing/TweetText';
 
 interface Props {
-  tweet: SingleTweetWithConnection;
+  tweet: DetailedTweet;
   userId: string;
 }
 
@@ -128,7 +125,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
       <section className="py-1 border-t border-b border-gray-300">
         <div className="flex items-center justify-between gap-x-8">
           <Comment
-            totalReplies={tweet.replies.length}
+            totalReplies={tweet._count.replies}
             replyTweet={replyTweet}
           />
           <Like
