@@ -1,7 +1,12 @@
 import { currentUser } from '@clerk/nextjs/server';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAction } from '@/actions/user.action';
 import EditProfileForm from '@/components/forms/EditProfileForm';
+
+export const metadata: Metadata = {
+  title: 'Edit profile / X'
+};
 
 const Page = async () => {
   const clerkUser = await currentUser();

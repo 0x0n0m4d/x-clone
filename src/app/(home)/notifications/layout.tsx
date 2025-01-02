@@ -1,10 +1,19 @@
 import { ReactNode, Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getNotifications } from '@/actions/notification.action';
 import { getUserAction } from '@/actions/user.action';
 import Topbar from '@/components/notifications/Topbar';
 import Loading from '@/components/sharing/Loading';
+
+export const metadata: Metadata = {
+  title: 'Notifications',
+  openGraph: {
+    title: 'Notifications',
+    siteName: 'X (formerly Twitter)'
+  }
+};
 
 interface Props {
   children: ReactNode;

@@ -1,10 +1,19 @@
 import { ReactNode, Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserAction } from '@/actions/user.action';
 import Topbar from '@/components/explore/Topbar';
 import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 import Loading from '@/components/sharing/Loading';
+
+export const metadata: Metadata = {
+  title: 'Explore',
+  openGraph: {
+    title: 'Explore',
+    siteName: 'X (formerly Twitter)'
+  }
+};
 
 interface Props {
   children: ReactNode;

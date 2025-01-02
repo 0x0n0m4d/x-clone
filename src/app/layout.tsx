@@ -11,8 +11,18 @@ const font = Lato({
 });
 
 export const metadata: Metadata = {
-  title: 'X Twitter',
-  description: 'Create your own thread'
+  title: {
+    default: 'X',
+    template: '%s / X'
+  },
+  themeColor: 'black',
+  openGraph: {
+    title: {
+      default: 'X',
+      template: '%s / X'
+    },
+    siteName: 'X (formerly Twitter)'
+  }
 };
 
 export default function RootLayout({
