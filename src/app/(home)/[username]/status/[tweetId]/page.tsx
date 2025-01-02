@@ -1,8 +1,8 @@
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getTweetAction } from '@/actions/tweet.action';
+import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserByUsernameAction } from '@/actions/user.action';
-import ShowTweetsData from '@/components/home/ShowTweetsData';
+import ShowRepliesData from '@/components/tweetId/ShowRepliesData';
 
 interface Props {
   params: {
@@ -19,15 +19,19 @@ const Page = async ({ params }: Props) => {
   const user = await getUserByUsernameAction(clerkUser.id);
   if (!user) return redirect('/');
 
-  let initialDataTweets: any = await getTweetAction(tweetId);
-  initialDataTweets = initialDataTweets?.replies || [];
+  let initialRepliesData = await getTweetsAction({
+    userId: user.id,
+    parentId: tweetId,
+    isFollowing: false
+  });
 
   return (
     <>
-      {initialDataTweets ? (
-        <ShowTweetsData
-          initialDataTweets={initialDataTweets}
+      {initialRepliesData ? (
+        <ShowRepliesData
+          initialRepliesData={initialRepliesData}
           isFollowing={false}
+          parentId={tweetId}
           userId={user.id}
         />
       ) : null}
