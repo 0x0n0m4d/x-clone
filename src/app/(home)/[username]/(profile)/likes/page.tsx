@@ -1,6 +1,6 @@
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getLikeTweetsByUserId } from '@/actions/tweet.action';
+import { getLikeTweetsByUserIdAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
 import NotFound from '@/components/sharing/404';
@@ -41,7 +41,7 @@ const Page = async ({ params }: Props) => {
   const user = await getUserByUsernameAction(username);
   if (!user) return <NotFound />;
 
-  let likeTweets = await getLikeTweetsByUserId(user.id);
+  let likeTweets = await getLikeTweetsByUserIdAction(user.id);
   if (!likeTweets?.length) likeTweets = [];
 
   const isLikeTweetsEmpty = !likeTweets.length;
