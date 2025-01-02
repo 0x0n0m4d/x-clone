@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { toast } from 'react-hot-toast';
 import { Bookmark as Bookmarked } from '@prisma/client';
+import { Bookmark as BookmarkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { toggleBookmarkTweet } from '@/lib/tweet';
@@ -55,13 +56,7 @@ const Bookmark = ({
           className="object-contain"
         />
       ) : (
-        <Image
-          src="/assets/bookmark-icon.svg"
-          alt="Bookmark Fill"
-          width={20}
-          height={20}
-          className="object-contain"
-        />
+        <BookmarkIcon size="20" />
       )}
       <span className="text-sm font-extrabold">{totalBookmarks}</span>
     </Button>

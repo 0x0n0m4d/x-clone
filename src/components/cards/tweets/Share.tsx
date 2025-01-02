@@ -37,6 +37,7 @@ const Share = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="end">
         <DropdownMenuItem
+          className="text-blue"
           onClick={() => copyLinkTweet({ toast, username, tweetId })}
         >
           <LinkIcon size="20" />
