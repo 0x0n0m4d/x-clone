@@ -108,185 +108,35 @@ export async function getTweetsAction({
   try {
     const skip = size * page;
 
-    if (Boolean(skip)) {
-      if (isFollowing) {
-        return await prisma.thread.findMany({
-          where: {
-            parentId: null,
-            user: {
-              followers: {
-                some: {
-                  followingId: userId
-                }
-              }
-            }
-          },
-          include: {
-            user: {
-              include: {
-                followers: true,
-                followings: true
-              }
-            },
-            bookmarks: true,
-            likes: true,
-            replies: {
-              select: {
-                id: true
-              }
-            }
-          },
-          orderBy: {
-            createdAt: 'desc'
-          },
-          skip,
-          take: size
-        });
+    const where = {
+      parentId: parentId ? { equals: parentId, not: null } : null,
+      user: {
+        followers: isFollowing ? { some: { followingId: userId } } : undefined
       }
-
-      if (parentId) {
-        return await prisma.thread.findMany({
-          where: {
-            parentId: {
-              equals: parentId,
-              not: null
-            }
-          },
-          include: {
-            user: {
-              include: {
-                followers: true,
-                followings: true
-              }
-            },
-            bookmarks: true,
-            likes: true,
-            replies: {
-              select: {
-                id: true
-              }
-            }
-          },
-          orderBy: {
-            createdAt: 'desc'
-          },
-          skip,
-          take: size
-        });
-      }
-
-      return await prisma.thread.findMany({
-        where: {
-          parentId: null
-        },
+    };
+    const include = {
+      user: {
         include: {
-          user: {
-            include: {
-              followers: true,
-              followings: true
-            }
-          },
-          bookmarks: true,
-          likes: true,
-          replies: {
-            select: {
-              id: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        skip,
-        take: size
-      });
-    }
-    if (isFollowing) {
-      return await prisma.thread.findMany({
-        where: {
-          parentId: null,
-          user: {
-            followers: {
-              some: {
-                followingId: userId
-              }
-            }
-          }
-        },
-        include: {
-          user: {
-            include: {
-              followers: true,
-              followings: true
-            }
-          },
-          bookmarks: true,
-          likes: true,
-          replies: {
-            select: {
-              id: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        take: size
-      });
-    }
-
-    if (parentId) {
-      return await prisma.thread.findMany({
-        where: {
-          parentId: {
-            equals: parentId,
-            not: null
-          }
-        },
-        include: {
-          user: {
-            include: {
-              followers: true,
-              followings: true
-            }
-          },
-          bookmarks: true,
-          likes: true,
-          replies: {
-            select: {
-              id: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        take: size
-      });
-    }
-
-    return await prisma.thread.findMany({
-      where: {
-        parentId: null
-      },
-      include: {
-        user: {
-          include: {
-            followers: true,
-            followings: true
-          }
-        },
-        bookmarks: true,
-        likes: true,
-        replies: {
-          select: {
-            id: true
-          }
+          followers: true,
+          followings: true
         }
       },
+      bookmarks: true,
+      likes: true,
+      replies: {
+        select: {
+          id: true
+        }
+      }
+    };
+
+    return await prisma.thread.findMany({
+      where,
+      include,
       orderBy: {
         createdAt: 'desc'
       },
+      skip,
       take: size
     });
   } catch (error) {
