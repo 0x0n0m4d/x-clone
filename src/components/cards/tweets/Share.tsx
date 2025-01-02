@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { copyLinkTweet, toggleBookmarkTweet } from '@/lib/tweet';
+import { cn } from '@/lib/utils';
 
 interface Props {
   userId: string;
@@ -56,11 +57,19 @@ const Share = ({
                 threadId: tweetId
               })
             }
+            disabled={isPending}
+            className={cn(isPending && 'opacity-50 cursor-not-allowed')}
           >
             {bookmark ? (
-              <BookmarkMinus size="20" />
+              <>
+                <BookmarkMinus size="20" />
+                Delete From Bookmarks
+              </>
             ) : (
-              <BookmarkPlus size="20" />
+              <>
+                <BookmarkPlus size="20" />
+                Bookmark
+              </>
             )}
             {bookmark ? 'Delete From Bookmarks' : 'Bookmark'}
           </DropdownMenuItem>
