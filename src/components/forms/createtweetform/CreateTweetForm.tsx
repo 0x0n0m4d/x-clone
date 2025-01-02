@@ -9,6 +9,10 @@ import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import * as z from 'zod';
+import {
+  commentPostNotificationAction,
+  replyCommentPostNotificationAction
+} from '@/actions/notification.action';
 import { createTweetAction } from '@/actions/tweet.action';
 import {
   Form,
@@ -102,11 +106,11 @@ const CreateTweetForm = ({
           path
         };
 
-        const notificationTypeUrl = dataTweet.isParentIdExist
-          ? '/api/notifications/reply'
-          : '/api/notifications/comment';
+        const notificationType = dataTweet.isParentIdExist
+          ? replyCommentPostNotificationAction
+          : commentPostNotificationAction;
 
-        await axios.post(notificationTypeUrl, dataNotification);
+        await notificationType(dataNotification);
       }
 
       if (isMobile && isReply) {
@@ -122,7 +126,6 @@ const CreateTweetForm = ({
       onCloseModal();
       form.reset();
       setPreviewImage('');
-      router.refresh();
     }
   }
 
