@@ -78,33 +78,35 @@ export async function getTweetsAction({
   parentId = ''
 }: GetTweetsActionProps) {
   try {
+    if (!userId) throw new Error('userId required');
     const skip = size * page;
 
-    const where = {
-      parentId: parentId ? { equals: parentId, not: null } : null,
-      user: {
-        followers: isFollowing ? { some: { followingId: userId } } : undefined
-      }
-    };
-    const include = {
-      user: {
-        include: {
-          followers: true,
-          followings: true
+    return await prisma.thread.findMany({
+      where: {
+        parentId: parentId ? parentId : null,
+        user: {
+          followers: isFollowing ? { some: { followingId: userId } } : undefined
         }
       },
-      bookmarks: true,
-      likes: true,
-      replies: {
-        select: {
-          id: true
+      include: {
+        user: {
+          select: {
+            id: true,
+            imageUrl: true,
+            name: true,
+            username: true,
+            followers: true,
+            followings: true
+          }
+        },
+        bookmarks: true,
+        likes: true,
+        _count: {
+          select: {
+            replies: true
+          }
         }
-      }
-    };
-
-    return await prisma.thread.findMany({
-      where,
-      include,
+      },
       orderBy: {
         createdAt: 'desc'
       },
@@ -190,7 +192,7 @@ export async function getTweetsBySearchAction({
   searchQuery = ''
 }: GetTweetsBySearchActionProps) {
   try {
-    const results = await prisma.thread.findMany({
+    await prisma.thread.findMany({
       where: {
         parentId: null,
         OR: [
@@ -219,16 +221,20 @@ export async function getTweetsBySearchAction({
       },
       include: {
         user: {
-          include: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            imageUrl: true,
             followers: true,
             followings: true
           }
         },
         likes: true,
         bookmarks: true,
-        replies: {
+        _count: {
           select: {
-            id: true
+            replies: true
           }
         }
       },
@@ -239,8 +245,6 @@ export async function getTweetsBySearchAction({
       },
       take: size
     });
-
-    return results;
   } catch (error) {
     console.info('[ERROR_GET_TWEETS_BY_SEARCH_ACTION]', error);
   }

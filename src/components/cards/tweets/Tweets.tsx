@@ -6,16 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import TweetText from '@/components/sharing/TweetText';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import {
-  DataTweet,
-  MultipleTweetWithConnection
-} from '@/interfaces/tweet.interface';
+import { DataTweet, DetailedTweet } from '@/interfaces/tweet.interface';
 import { renderText } from '@/lib/tweet';
 import { customDatePost } from '@/lib/utils';
 import { Comment, Like, Menu, Share } from './';
 
 interface Props {
-  tweet: MultipleTweetWithConnection;
+  tweet: DetailedTweet;
   userId: string;
 }
 
@@ -122,7 +119,7 @@ const Tweets = ({ tweet, userId }: Props) => {
           </section>
           <section className="flex items-center gap-x-8">
             <Comment
-              totalReplies={tweet.replies.length}
+              totalReplies={tweet._count.replies}
               replyTweet={replyTweet}
             />
             <Like
