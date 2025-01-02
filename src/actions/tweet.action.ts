@@ -18,35 +18,18 @@ export const createTweetAction = async ({
   path
 }: CreateTweetActionProps) => {
   try {
-    if (parentId) {
-      const result = await prisma.thread.create({
-        data: {
-          userId,
-          imageUrl,
-          text,
-          parentId
-        }
-      });
-
-      return result;
-    }
-
-    if (!userId) throw new Error('userId required');
-    if (!text) throw new Error('text required');
-
-    const result = await prisma.thread.create({
+    await prisma.thread.create({
       data: {
         userId,
         imageUrl,
-        text
+        text,
+        parentId
       }
     });
-
-    return result;
   } catch (error: any) {
     console.log('[ERROR_CREATE_TWEET_ACTION]', error);
   } finally {
-    revalidatePath(path || '/home');
+    revalidatePath(path);
   }
 };
 
