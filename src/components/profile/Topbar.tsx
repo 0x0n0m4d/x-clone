@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -20,6 +20,8 @@ const Topbar = ({ name, username, userId }: Props) => {
   const { navigationHistory, goBack } = usePrevious();
   const [title, setTitle] = useState('');
   const [totalTweets, setTotalTweets] = useState('');
+  const [isPending, startTransition] = useTransition();
+
   const path = usePathname();
   const router = useRouter();
 
@@ -53,9 +55,14 @@ const Topbar = ({ name, username, userId }: Props) => {
   }, [path]);
 
   const redirectToPreviousPage = () => {
+    if (isPending) return;
+
     const len = navigationHistory.length - 1;
     router.push(navigationHistory[len] ?? '/home');
-    goBack();
+
+    startTransition(() => {
+      goBack();
+    });
   };
 
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTransition } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePrevious } from '@/hooks/usePrevious';
@@ -14,11 +15,17 @@ interface Props {
 const Topbar = ({ user }: Props) => {
   const router = useRouter();
   const { navigationHistory, goBack } = usePrevious();
+  const [isPending, startTransition] = useTransition();
 
   const redirectToPreviousPage = () => {
+    if (isPending) return;
+
     const len = navigationHistory.length - 1;
     router.push(navigationHistory[len] ?? '/home');
-    goBack();
+
+    startTransition(() => {
+      goBack();
+    });
   };
 
   return (

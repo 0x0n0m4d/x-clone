@@ -27,6 +27,7 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
 
   const { navigationHistory, goBack } = usePrevious();
   const [isPending, startTransition] = useTransition();
+  const [isPendingRedirect, startTransitionRedirect] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const markAllNotificationsAsRead = () => {
@@ -42,9 +43,14 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
   };
 
   const redirectToPreviousPage = () => {
+    if (isPendingRedirect) return;
+
     const len = navigationHistory.length - 1;
     router.push(navigationHistory[len]);
-    goBack();
+
+    startTransitionRedirect(() => {
+      goBack();
+    });
   };
 
   return (
