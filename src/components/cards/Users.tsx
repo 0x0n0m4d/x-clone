@@ -35,7 +35,9 @@ const Users = ({
   const [isPending, startTransition] = useTransition();
 
   const followed = currentUser.followings.find(
-    ({ followingId }) => followingId === userId
+    ({ followingId, followerId }) => {
+      return followingId === currentUser.id && followerId === userId;
+    }
   );
 
   const isFollowed = () => {

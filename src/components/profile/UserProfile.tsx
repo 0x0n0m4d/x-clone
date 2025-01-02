@@ -29,14 +29,13 @@ interface Props {
 }
 
 const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
-  const isBannerUrlEmpty = !user.bannerUrl;
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
 
-  const followed = user.followers.find(
-    ({ followingId }) => followingId === currentUser.id
-  );
+  const followed = user.followers.find(({ followingId, followerId }) => {
+    return followingId === currentUser.id && followerId === user.id;
+  });
 
   const isFollowed = () => {
     if (isPending) return '...';
@@ -164,9 +163,6 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
   };
 
   const displayFollowersAndFollowings = () => {
-    const totalFollowers = user.followers.length;
-    const totalFollowings = user.followings.length;
-
     return (
       <div className="flex items-center gap-x-5">
         <p className="font-normal flex gap-x-2">
