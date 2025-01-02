@@ -2,10 +2,20 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
-import ShowTweetsData from '@/components/home/ShowTweetsData';
-import NotFound from '@/components/sharing/NotFound';
+import Tweets from '@/components/cards/tweets/Tweets';
+import PaginationButtons from '@/components/sharing/PaginationButtons';
+import { isValidPage } from '@/lib/utils';
 
-const Page = async () => {
+interface Props {
+  searchParams: {
+    page: string;
+  };
+}
+
+const Page = async ({ searchParams }: Props) => {
+  const { page: qPage } = searchParams;
+  const page = isValidPage(qPage);
+
   const clerkUser = await currentUser();
   if (!clerkUser) return null;
 
@@ -16,20 +26,21 @@ const Page = async () => {
 
   let tweets = await getTweetsAction({
     userId: user.id,
-    isFollowing
+    isFollowing,
+    page
   });
-  if (!tweets?.length) tweets = [];
 
   return (
     <>
-      {tweets.length ? (
-        <ShowTweetsData
-          userId={user.id}
-          isFollowing={isFollowing}
-          initialDataTweets={tweets}
-        />
-      ) : (
-        <NotFound description="No posts can be displayed" />
+      {tweets?.data.length && (
+        <>
+          {tweets?.data.map(tweet => <Tweets tweet={tweet} userId={user.id} />)}
+          <PaginationButtons
+            currentPage={page}
+            currentPath="/home/following"
+            hasNext={tweets.hasNext}
+          />
+        </>
       )}
     </>
   );

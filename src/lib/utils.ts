@@ -96,3 +96,10 @@ export const getCurrentPath = () => {
 
   return `${path}${searchParams}`;
 };
+
+export const isValidPage = (qPage: string): number => {
+  const page = parseInt(qPage);
+
+  if (page < 0 || isNaN(page)) return 0;
+  return page;
+};
