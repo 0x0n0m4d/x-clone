@@ -93,7 +93,7 @@ export async function getUsersAction({
 
     if (isOnSearch) {
       if (!searchQuery) return [];
-      const users = await prisma.user.findMany({
+      await prisma.user.findMany({
         where: {
           id: {
             not: userId
@@ -113,49 +113,26 @@ export async function getUsersAction({
         },
         take: size
       });
-
-      return users;
     }
 
     const skip = size * page;
-    let dataUsers: User[];
 
-    if (skip) {
-      dataUsers = await prisma.user.findMany({
-        where: {
-          id: {
-            not: userId
-          },
+    await prisma.user.findMany({
+      where: {
+        NOT: {
           followers: {
-            none: {
-              NOT: {
-                followerId: userId
-              }
+            some: {
+              followingId: userId
             }
           }
         },
-        skip,
-        take: size
-      });
-    } else {
-      dataUsers = await prisma.user.findMany({
-        where: {
-          id: {
-            not: userId
-          },
-          followers: {
-            none: {
-              NOT: {
-                followerId: userId
-              }
-            }
-          }
-        },
-        take: size
-      });
-    }
-
-    return dataUsers;
+        id: {
+          not: userId
+        }
+      },
+      skip: skip ?? 0,
+      take: size
+    });
   } catch (error: any) {
     console.log('[ERROR_GET_USERS_ACTION]', error);
   }
@@ -220,25 +197,6 @@ export const toggleFollowUserAction = async ({
   path
 }: ToggleFollowUserActionProps) => {
   try {
-    if (userId && !currentUserId) {
-      const existingUser = await prisma.follower.findFirst({
-        where: {
-          followerId: userId
-        }
-      });
-
-      if (!existingUser) return;
-
-      return await prisma.follower.delete({
-        where: {
-          id: existingUser.id
-        }
-      });
-    }
-
-    if (!userId) throw new Error('userId requided');
-    if (!currentUserId) throw new Error('currentUserId requided');
-
     const existingUser = await prisma.follower.findFirst({
       where: {
         followerId: userId,
