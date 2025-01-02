@@ -22,7 +22,7 @@ import {
 import { usePrevious } from '@/hooks/usePrevious';
 import { deleteTweet } from '@/lib/tweet';
 import { toggleFollowUser } from '@/lib/user';
-import { cn } from '@/lib/utils';
+import { cn, getCurrentPath } from '@/lib/utils';
 
 interface Props {
   username: string;
@@ -61,7 +61,7 @@ const Menu = ({
   };
 
   const redirectToDetailPost = () => {
-    addToNavigationHistory(window.location.href);
+    addToNavigationHistory(getCurrentPath());
     router.push(`/${username}/status/${tweetId}`);
   };
   return (

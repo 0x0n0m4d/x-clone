@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { links } from '@/constants';
 import { usePrevious } from '@/hooks/usePrevious';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import { cn } from '@/lib/utils';
+import { cn, getCurrentPath } from '@/lib/utils';
 
 interface Props {
   username: string;
@@ -17,7 +17,7 @@ interface Props {
 
 const Lists = ({ username, totalNotifications }: Props) => {
   const pathname = usePathname();
-  const { addToNavigationHistory, navigationHistory } = usePrevious();
+  const { addToNavigationHistory } = usePrevious();
   const openTweetModal = useTweetModal(state => state.onOpen);
 
   return (
@@ -35,7 +35,7 @@ const Lists = ({ username, totalNotifications }: Props) => {
               const isNotifications = link.href === '/notifications';
               const isProfile = link.href === `/${username}`;
               if (isNotifications || isProfile) {
-                addToNavigationHistory(window.location.href);
+                addToNavigationHistory(getCurrentPath());
               }
             }}
             className={cn(

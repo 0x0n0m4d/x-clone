@@ -9,10 +9,6 @@ import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import * as z from 'zod';
-import {
-  commentPostNotificationAction,
-  replyCommentPostNotificationAction
-} from '@/actions/notification.action';
 import { createTweetAction } from '@/actions/tweet.action';
 import {
   Form,
@@ -96,10 +92,7 @@ const CreateTweetForm = ({
         values.imageUrl = imageUrl;
       }
 
-      await axios.post('/api/thread', {
-        ...values,
-        path
-      });
+      await createTweetAction({ ...values, path });
 
       if (dataTweet && dataTweet.parentId) {
         const dataNotification = {

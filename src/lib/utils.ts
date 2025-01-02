@@ -89,3 +89,10 @@ export function convertToHttps(url: string) {
     };
   }
 }
+
+export const getCurrentPath = () => {
+  const path = window.location.pathname;
+  const searchParams = window.location.search;
+
+  return `${path}${searchParams}`;
+};

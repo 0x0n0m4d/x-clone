@@ -9,7 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { usePrevious } from '@/hooks/usePrevious';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { toggleFollowUser } from '@/lib/user';
-import { cn } from '@/lib/utils';
+import { cn, getCurrentPath } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 interface UsersProps {
@@ -74,7 +74,7 @@ const Users = ({
         <div className="flex items-start flex-col -space-y-1">
           <Link
             href={`/${username}`}
-            onClick={() => addToNavigationHistory(window.location.href)}
+            onClick={() => addToNavigationHistory(getCurrentPath())}
             className={cn(
               'font-normal text-white whitespace-nowrap hover:underline'
             )}
