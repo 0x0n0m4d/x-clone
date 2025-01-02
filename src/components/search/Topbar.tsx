@@ -1,6 +1,8 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { usePrevious } from '@/hooks/usePrevious';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import Searchbar from '../sharing/searchbar/Searchbar';
 import { Button } from '../ui/button';
@@ -10,13 +12,22 @@ interface Props {
 }
 
 const Topbar = ({ user }: Props) => {
+  const router = useRouter();
+  const { navigationHistory, goBack } = usePrevious();
+
+  const redirectToPreviousPage = () => {
+    const len = navigationHistory.length - 1;
+    router.push(navigationHistory[len] ?? '/home');
+    goBack();
+  };
+
   return (
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80 py-4 px-3 flex justify-between items-center gap-x-3">
       <Button
         className="rounded-full hover:bg-gray-300/50 transition"
         variant="icon"
         size="icon"
-        onClick={() => history.back()}
+        onClick={redirectToPreviousPage}
       >
         <ArrowLeft size="16" />
       </Button>

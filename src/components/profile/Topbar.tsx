@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   getLikeTweetsByUserId,
   getTweetsByUserIdAction
 } from '@/actions/tweet.action';
+import { usePrevious } from '@/hooks/usePrevious';
 import { Button } from '../ui/button';
 
 interface Props {
@@ -16,9 +17,11 @@ interface Props {
 }
 
 const Topbar = ({ name, username, userId }: Props) => {
+  const { navigationHistory, goBack } = usePrevious();
   const [title, setTitle] = useState('');
   const [totalTweets, setTotalTweets] = useState('');
   const path = usePathname();
+  const router = useRouter();
 
   const getTotalTweets = async () => {
     if (path === `/${username}`) {
@@ -49,12 +52,18 @@ const Topbar = ({ name, username, userId }: Props) => {
     getTotalTweets();
   }, [path]);
 
+  const redirectToPreviousPage = () => {
+    const len = navigationHistory.length - 1;
+    router.push(navigationHistory[len] ?? '/home');
+    goBack();
+  };
+
   return (
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
       <div className="px-3 py-4">
         <div className="flex flex-row items-center gap-x-2">
           <Button
-            onClick={() => history.back()}
+            onClick={redirectToPreviousPage}
             variant="icon"
             size="icon"
             className="rounded-full hover:bg-gray-300/50 transition"

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { links } from '@/constants';
+import { usePrevious } from '@/hooks/usePrevious';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +17,7 @@ interface Props {
 
 const Lists = ({ username, totalNotifications }: Props) => {
   const pathname = usePathname();
+  const { addToNavigationHistory, navigationHistory } = usePrevious();
   const openTweetModal = useTweetModal(state => state.onOpen);
 
   return (
@@ -29,6 +31,13 @@ const Lists = ({ username, totalNotifications }: Props) => {
         return (
           <li
             key={link.title}
+            onClick={() => {
+              const isNotifications = link.href === '/notifications';
+              const isProfile = link.href === `/${username}`;
+              if (isNotifications || isProfile) {
+                addToNavigationHistory(window.location.href);
+              }
+            }}
             className={cn(
               'w-fit rounded-full overflow-hidden',
               isSamePath && 'font-bold'

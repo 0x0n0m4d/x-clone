@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { usePrevious } from '@/hooks/usePrevious';
 import { cn } from '@/lib/utils';
 
 interface TabProps {
@@ -9,6 +10,7 @@ interface TabProps {
 }
 
 const Tab = ({ title }: TabProps) => {
+  const { addToNavigationHistory } = usePrevious();
   const searchParams = useSearchParams();
   const queryQ = searchParams?.get('q');
   const queryF = searchParams?.get('f');
@@ -24,6 +26,7 @@ const Tab = ({ title }: TabProps) => {
   return (
     <Link
       href={optionLinks}
+      onClick={() => addToNavigationHistory(window.location.href)}
       className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
     >
       <p

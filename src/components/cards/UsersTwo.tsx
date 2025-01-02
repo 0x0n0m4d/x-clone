@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { usePrevious } from '@/hooks/usePrevious';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { toggleFollowUser } from '@/lib/user';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,7 @@ const UsersTwo = ({
   currentUser
 }: UserProps) => {
   const path = usePathname();
+  const { addToNavigationHistory } = usePrevious();
   const [isPending, startTransition] = useTransition();
 
   const followed = currentUser.followings.find(
@@ -59,6 +61,7 @@ const UsersTwo = ({
             <div className="flex items-start flex-col -space-y-1">
               <Link
                 href={`/${username}`}
+                onClick={() => addToNavigationHistory(`/${username}`)}
                 className={cn(
                   'font-bold text-white whitespace-nowrap hover:underline'
                 )}

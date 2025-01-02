@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { usePrevious } from '@/hooks/usePrevious';
 import { deleteTweet } from '@/lib/tweet';
 import { toggleFollowUser } from '@/lib/user';
 import { cn } from '@/lib/utils';
@@ -43,6 +44,7 @@ const Menu = ({
   followed
 }: Props) => {
   const router = useRouter();
+  const { addToNavigationHistory } = usePrevious();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPendingTweet, startTransitionTweet] = useTransition();
@@ -57,6 +59,11 @@ const Menu = ({
       id: tweetId
     });
   };
+
+  const redirectToDetailPost = () => {
+    addToNavigationHistory(window.location.href);
+    router.push(`/${username}/status/${tweetId}`);
+  };
   return (
     <>
       <DropdownMenu>
@@ -64,9 +71,7 @@ const Menu = ({
           <MoreHorizontal />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
-          <DropdownMenuItem
-            onClick={() => router.push(`/${username}/status/${tweetId}`)}
-          >
+          <DropdownMenuItem onClick={redirectToDetailPost}>
             <ArrowUpRight size="30px" />
             Go To Post
           </DropdownMenuItem>

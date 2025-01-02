@@ -1,9 +1,19 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { usePrevious } from '@/hooks/usePrevious';
 import { Button } from '../ui/button';
 
 const Topbar = () => {
+  const router = useRouter();
+  const { navigationHistory, goBack } = usePrevious();
+
+  const redirectToPreviousPage = () => {
+    const len = navigationHistory.length - 1;
+    router.push(navigationHistory[len] ?? '/home');
+    goBack();
+  };
   return (
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
       <div className="px-3 py-4">
@@ -12,7 +22,7 @@ const Topbar = () => {
             variant="icon"
             size="icon"
             className="rounded-full hover:bg-gray-300/50 transition"
-            onClick={() => history.back()}
+            onClick={redirectToPreviousPage}
           >
             <ArrowLeft size="16" />
           </Button>

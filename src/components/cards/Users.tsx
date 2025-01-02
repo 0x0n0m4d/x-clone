@@ -6,6 +6,7 @@ import { User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { usePrevious } from '@/hooks/usePrevious';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { toggleFollowUser } from '@/lib/user';
 import { cn } from '@/lib/utils';
@@ -32,6 +33,7 @@ const Users = ({
 }: UsersProps) => {
   const path = usePathname();
   const router = useRouter();
+  const { addToNavigationHistory } = usePrevious();
   const [isPending, startTransition] = useTransition();
 
   const followed = currentUser.followings.find(
@@ -72,6 +74,7 @@ const Users = ({
         <div className="flex items-start flex-col -space-y-1">
           <Link
             href={`/${username}`}
+            onClick={() => addToNavigationHistory(window.location.href)}
             className={cn(
               'font-normal text-white whitespace-nowrap hover:underline'
             )}
