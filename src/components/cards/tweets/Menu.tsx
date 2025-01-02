@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { deleteTweet } from '@/lib/tweet';
 import { toggleFollowUser } from '@/lib/user';
+import { cn } from '@/lib/utils';
 
 interface Props {
   username: string;
@@ -72,7 +73,11 @@ const Menu = ({
           {isOwnTweet ? (
             <DropdownMenuItem
               onClick={() => setIsDialogOpen(true)}
-              className="text-[#f4212e]"
+              className={cn(
+                'text-[#f4212e]',
+                isPendingTweet && 'opacity-50 cursor-not-allowed'
+              )}
+              disabled={isPendingTweet}
             >
               <Trash size="20px" />
               Delete
@@ -91,6 +96,10 @@ const Menu = ({
                   currentUserId
                 })
               }
+              disabled={isPendingFollowUser}
+              className={cn(
+                isPendingFollowUser && 'opacity-50 cursor-not-allowed'
+              )}
             >
               {followed ? <UserX2 size="20" /> : <UserPlus2 size="20" />}
               {followed ? 'Unfollow' : 'Follow'}
