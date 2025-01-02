@@ -76,6 +76,7 @@ export interface GetTweetsActionProps {
   page?: number;
   userId: string;
   isFollowing: boolean;
+  parentId?: string;
 }
 
 export interface CreateTweetActionProps {
