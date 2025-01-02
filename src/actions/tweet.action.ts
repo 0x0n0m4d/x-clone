@@ -71,7 +71,7 @@ export async function getTweetAction(id: string) {
 }
 
 export async function getTweetsAction({
-  size = 20,
+  size = 30,
   page = 0,
   userId,
   isFollowing,
@@ -81,7 +81,7 @@ export async function getTweetsAction({
     if (!userId) throw new Error('userId required');
     const skip = size * page;
 
-    return await prisma.thread.findMany({
+    const data = await prisma.thread.findMany({
       where: {
         parentId: parentId ? parentId : null,
         user: {
@@ -113,6 +113,21 @@ export async function getTweetsAction({
       skip,
       take: size
     });
+
+    const totalCount = await prisma.thread.count({
+      where: {
+        parentId: parentId ? parentId : null,
+        user: {
+          followers: isFollowing ? { some: { followingId: userId } } : undefined
+        }
+      }
+    });
+    const hasNext = Boolean(totalCount - skip - data.length);
+
+    return {
+      data,
+      hasNext
+    };
   } catch (error) {
     console.log('[GET_TWEETS_ACTION]', error);
   }
