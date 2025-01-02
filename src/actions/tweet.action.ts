@@ -353,16 +353,20 @@ export async function getBookmarksAction(userId: string) {
         thread: {
           include: {
             user: {
-              include: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                imageUrl: true,
                 followers: true,
                 followings: true
               }
             },
             bookmarks: true,
             likes: true,
-            replies: {
+            _count: {
               select: {
-                id: true
+                replies: true
               }
             }
           }
