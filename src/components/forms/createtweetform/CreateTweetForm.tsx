@@ -4,9 +4,10 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import * as z from 'zod';
 import {
   commentPostNotificationAction,
@@ -55,6 +56,7 @@ const CreateTweetForm = ({
   const onCloseModal = useTweetModal(state => state.onClose);
   const { dataTweet, setDataTweet } = useReplyTweet();
   const path = usePathname();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();
@@ -94,29 +96,24 @@ const CreateTweetForm = ({
         values.imageUrl = imageUrl;
       }
 
-      if (isModal) {
-        setDataTweet(null);
-        onCloseModal();
-      }
-
-      form.reset();
-      setPreviewImage('');
-
-      await createTweetAction({
+      await axios.post('/api/thread', {
         ...values,
         path
       });
 
       if (dataTweet && dataTweet.parentId) {
-        const notificationType = dataTweet.isParentIdExist
-          ? replyCommentPostNotificationAction
-          : commentPostNotificationAction;
-        await notificationType({
+        const dataNotification = {
           userId: dataTweet.user.id,
           sourceId: userId,
           parentIdPost: dataTweet.id,
           path
-        });
+        };
+
+        const notificationTypeUrl = dataTweet.isParentIdExist
+          ? '/api/notifications/reply'
+          : '/api/notifications/comment';
+
+        await axios.post(notificationTypeUrl, dataNotification);
       }
 
       if (isMobile && isReply) {
@@ -125,9 +122,14 @@ const CreateTweetForm = ({
         window.location.href = '/home';
       }
     } catch (error: any) {
-      console.log('[ERROR_CREATE_TWEET_FORM]', error.message);
+      console.info('[ERROR_CREATE_TWEET_FORM]', error.message);
     } finally {
       setIsLoading(false);
+      setDataTweet(null);
+      onCloseModal();
+      form.reset();
+      setPreviewImage('');
+      router.refresh();
     }
   }
 
