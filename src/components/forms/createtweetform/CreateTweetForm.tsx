@@ -56,6 +56,7 @@ const CreateTweetForm = ({
   const { dataTweet, setDataTweet } = useReplyTweet();
   const path = usePathname();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const [previewImage, setPreviewImage] = useState('');
   const textarea = useRef<HTMLTextAreaElement | null>(null);
@@ -87,6 +88,7 @@ const CreateTweetForm = ({
 
   async function onSubmit(values: z.infer<typeof tweetSchema>) {
     try {
+      setIsLoading(true);
       if (previewImage) {
         const imageUrl = await uploadFile(file!);
         values.imageUrl = imageUrl;
@@ -124,10 +126,10 @@ const CreateTweetForm = ({
       }
     } catch (error: any) {
       console.log('[ERROR_CREATE_TWEET_FORM]', error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
-
-  const isLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     const { current } = textarea;
