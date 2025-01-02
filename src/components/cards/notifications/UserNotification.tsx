@@ -4,8 +4,9 @@ import { MouseEvent, useEffect, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { markAsReadNotification } from '@/actions/notification.action';
+import { usePrevious } from '@/hooks/usePrevious';
 import { DataNotification } from '@/interfaces/notifications.interface';
-import { customDatePost } from '@/lib/utils';
+import { cn, customDatePost, getCurrentPath } from '@/lib/utils';
 import Menu from './Menu';
 import Unread from './Unread';
 
@@ -16,6 +17,7 @@ interface Props {
 const UserNotification = ({ dataNotification }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { addToNavigationHistory } = usePrevious();
 
   const router = useRouter();
   const path = usePathname();
@@ -27,13 +29,15 @@ const UserNotification = ({ dataNotification }: Props) => {
 
     if (isPending) return;
 
-    window.location.href = `/${dataNotification.sourceUser?.username}`;
-
-    if (!dataNotification.isRead) {
-      startTransition(() => {
+    startTransition(() => {
+      if (!dataNotification.isRead) {
         markAsReadNotification(dataNotification.id, path);
-      });
-    }
+      }
+
+      const targetPath = `/${dataNotification.sourceUser?.username}`;
+      router.push(targetPath);
+      addToNavigationHistory(getCurrentPath());
+    });
   };
 
   const redirectToSourceId = (
@@ -53,7 +57,10 @@ const UserNotification = ({ dataNotification }: Props) => {
   return (
     <div
       onClick={e => handleNavigation(e)}
-      className="notifications__component"
+      className={cn(
+        'notifications__component',
+        isPending && 'notifications__component-disabled'
+      )}
     >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
