@@ -8,7 +8,14 @@ import {
   UpdateUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
-import { GetUsersActionType, SaveUserActionType } from '@/types/user.type';
+import {
+  GetUserActionType,
+  GetUserByUsernameActionType,
+  GetUsersActionType,
+  SaveUserActionType,
+  ToggleFollowUserActionType,
+  UpdateUserActionType
+} from '@/types/user.type';
 
 export async function saveUserAction({
   id,
@@ -58,21 +65,17 @@ export async function saveUserAction({
   }
 }
 
-export async function getUserAction(id: string) {
+export async function getUserAction(id: string): Promise<GetUserActionType> {
   try {
     if (!id) throw new Error('id required');
 
-    const result = await prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: { id },
       include: {
         followers: true,
         followings: true
       }
     });
-
-    if (!result) return;
-
-    return result;
   } catch (error: any) {
     console.log('[ERROR_GET_USER]', error);
   }
@@ -144,13 +147,13 @@ export async function updateUserAction({
   location,
   website,
   path
-}: UpdateUserActionProps) {
+}: UpdateUserActionProps): Promise<UpdateUserActionType> {
   try {
     if (!id) throw new Error('id required');
     if (!imageUrl) throw new Error('imageUrl required');
     if (!name) throw new Error('name required');
 
-    const updateUser = await prisma.user.update({
+    return await prisma.user.update({
       where: { id },
       data: {
         imageUrl,
@@ -161,8 +164,6 @@ export async function updateUserAction({
         website
       }
     });
-
-    return updateUser;
   } catch (error) {
     console.log('[ERROR_UPDATE_USER_ACTION]', error);
   } finally {
@@ -170,19 +171,19 @@ export async function updateUserAction({
   }
 }
 
-export async function getUserByUsernameAction(username: string) {
+export async function getUserByUsernameAction(
+  username: string
+): Promise<GetUserByUsernameActionType> {
   try {
     if (!username) throw new Error('username required');
 
-    const user = await prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: { username },
       include: {
         followers: true,
         followings: true
       }
     });
-
-    return user;
   } catch (error: any) {
     console.info('[ERROR_GET_USER_BY_USERNAME_ACTION]', error);
   }
@@ -192,7 +193,7 @@ export const toggleFollowUserAction = async ({
   userId,
   currentUserId,
   path
-}: ToggleFollowUserActionProps) => {
+}: ToggleFollowUserActionProps): Promise<ToggleFollowUserActionType> => {
   try {
     const existingUser = await prisma.follower.findFirst({
       where: {

@@ -1,4 +1,5 @@
-import { User } from '@prisma/client';
+import { Follower, User } from '@prisma/client';
+import { UserWithFollowers } from '@/interfaces/user.interface';
 
 export type GetUsersActionType =
   | {
@@ -8,3 +9,11 @@ export type GetUsersActionType =
   | undefined;
 
 export type SaveUserActionType = User | undefined;
+
+export type GetUserActionType = UserWithFollowers | null | undefined;
+
+export type UpdateUserActionType = User | undefined;
+
+export type GetUserByUsernameActionType = GetUserActionType;
+
+export type ToggleFollowUserActionType = Follower | undefined;
