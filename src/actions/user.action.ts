@@ -1,6 +1,5 @@
 'use server';
 
-import { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import {
   GetUsersActionProps,
@@ -9,7 +8,7 @@ import {
   UpdateUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
-import { GetUsersActionType } from '@/types/user.type';
+import { GetUsersActionType, SaveUserActionType } from '@/types/user.type';
 
 export async function saveUserAction({
   id,
@@ -19,7 +18,7 @@ export async function saveUserAction({
   email,
   bio,
   isCompleted
-}: SaveUserActionProps): Promise<User | undefined> {
+}: SaveUserActionProps): Promise<SaveUserActionType> {
   try {
     if (!id) throw new Error('id required');
     if (!name) throw new Error('name required');
@@ -85,7 +84,7 @@ export async function getUsersAction({
   userId,
   searchQuery = '',
   isOnSearch
-}: GetUsersActionProps): Promise<GetUsersActionType | undefined> {
+}: GetUsersActionProps): Promise<GetUsersActionType> {
   try {
     if (!userId) throw new Error('userId required');
     if (isOnSearch && !searchQuery) return;

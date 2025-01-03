@@ -8,7 +8,7 @@ import PaginationButtons from '../sharing/PaginationButtons';
 
 interface Props {
   currentUser: UserWithFollowers;
-  people: GetUsersActionType | undefined;
+  people: GetUsersActionType;
   queryQ: string;
   page: number;
 }
