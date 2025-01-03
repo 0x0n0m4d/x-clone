@@ -36,7 +36,7 @@ export const toggleBookmarkTweet = ({
   bookmark,
   userId,
   threadId
-}: ToggleBookmarkTweetProps) => {
+}: ToggleBookmarkTweetProps): void => {
   if (isPending) return;
 
   const message = bookmark
@@ -73,7 +73,7 @@ export const toggleLikeTweet = ({
   currentUserId,
   threadId,
   path
-}: ToggleLikeTweetProps) => {
+}: ToggleLikeTweetProps): void => {
   if (isPending) return;
 
   startTransition(() => {
@@ -100,7 +100,7 @@ export const toggleLikeTweet = ({
   });
 };
 
-export const renderText = (text: string) => {
+export const renderText = (text: string): string => {
   const textWithoutEmptyLines = text.replace(/^\s*$/gm, ' ');
   const textWithSingleLineBreaks = textWithoutEmptyLines.replace(/\n+/g, '\n');
   return textWithSingleLineBreaks;

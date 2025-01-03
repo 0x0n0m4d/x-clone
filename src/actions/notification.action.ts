@@ -9,13 +9,21 @@ import {
   ReplyCommentPostNotificationActionProps
 } from '@/interfaces/notifications.interface';
 import prisma from '@/lib/prismadb';
+import {
+  CommentPostNotificationActionType,
+  FollowUserNotificationActionType,
+  GetNotificationsActionType,
+  GetTotalNotificationsActionType,
+  LikePostNotificationActionType,
+  ReplyCommentPostNotificationActionType
+} from '@/types/notification.type';
 
 export const followUserNotificationAction = async ({
   userId,
   parentIdUser,
   sourceId,
   path
-}: FollowUserNotificationActionProps) => {
+}: FollowUserNotificationActionProps): Promise<FollowUserNotificationActionType> => {
   try {
     if (!userId) throw new Error('userId required');
     if (!parentIdUser) throw new Error('parentIdUser required');
@@ -43,7 +51,7 @@ export const likePostNotificationAction = async ({
   sourceId,
   parentIdPost,
   path
-}: LikePostNotificationActionProps) => {
+}: LikePostNotificationActionProps): Promise<LikePostNotificationActionType> => {
   try {
     if (!userId) throw new Error('userId required');
     if (!sourceId) throw new Error('sourceId required');
@@ -71,7 +79,7 @@ export const commentPostNotificationAction = async ({
   sourceId,
   parentIdPost,
   path
-}: CommentPostNotificationActionProps) => {
+}: CommentPostNotificationActionProps): Promise<CommentPostNotificationActionType> => {
   try {
     if (!userId) throw new Error('userId required');
     if (!sourceId) throw new Error('sourceId required');
@@ -99,7 +107,7 @@ export const replyCommentPostNotificationAction = async ({
   sourceId,
   parentIdPost,
   path
-}: ReplyCommentPostNotificationActionProps) => {
+}: ReplyCommentPostNotificationActionProps): Promise<ReplyCommentPostNotificationActionType> => {
   try {
     if (!userId) throw new Error('userId required');
     if (!sourceId) throw new Error('sourceId required');
@@ -126,7 +134,7 @@ export const getNotificationsAction = async ({
   userId,
   size = 30,
   page = 0
-}: GetNotificationActionProps) => {
+}: GetNotificationActionProps): Promise<GetNotificationsActionType> => {
   try {
     if (!userId) throw new Error('userId required');
 
@@ -173,12 +181,12 @@ export const getNotificationsAction = async ({
 export const markAsReadNotification = async (
   notificationId: string,
   path: string
-) => {
+): Promise<void> => {
   try {
     if (!notificationId) throw new Error('notificationId required');
     if (!path) throw new Error('path required');
 
-    return await prisma.notification.update({
+    await prisma.notification.update({
       where: {
         id: notificationId
       },
@@ -195,7 +203,7 @@ export const markAsReadNotification = async (
 
 export const getTotalNotificationsAction = async (
   userId: string
-): Promise<number | undefined> => {
+): Promise<GetTotalNotificationsActionType> => {
   try {
     return await prisma.notification.count({
       where: {
@@ -211,12 +219,12 @@ export const getTotalNotificationsAction = async (
 export const markAllNotificationsAsReadAction = async (
   userId: string,
   path: string
-) => {
+): Promise<void> => {
   try {
     if (!userId) throw new Error('userId required');
     if (!path) throw new Error('path required');
 
-    return await prisma.notification.updateMany({
+    await prisma.notification.updateMany({
       where: { userId },
       data: {
         isRead: true
@@ -232,11 +240,11 @@ export const markAllNotificationsAsReadAction = async (
 export const deleteNotificationAction = async (
   notificationId: string,
   path: string
-) => {
+): Promise<void> => {
   try {
     if (!notificationId) throw new Error('notificationId required');
 
-    return await prisma.notification.delete({
+    await prisma.notification.delete({
       where: { id: notificationId }
     });
   } catch (error) {

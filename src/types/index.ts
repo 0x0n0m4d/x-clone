@@ -4,3 +4,7 @@ export type ConvertToHttpsType =
       title: string;
     }
   | undefined;
+
+export type BatchPayload = {
+  count: number;
+};

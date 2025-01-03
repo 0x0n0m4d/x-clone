@@ -9,7 +9,18 @@ import {
   ToggleLikeActionProps
 } from '@/interfaces/tweet.interface';
 import prisma from '@/lib/prismadb';
-import { GetTweetsActionType, WhereFilter } from '@/types/tweet.type';
+import {
+  CreateTweetActionType,
+  DeleteBookmarksAction,
+  DeleteTweetActionType,
+  GetTotalBookmarkActionType,
+  GetTotalTweetsActionType,
+  GetTweetActionType,
+  GetTweetsActionType,
+  ToggleBookmarkActionType,
+  ToggleLikeActionType,
+  WhereFilter
+} from '@/types/tweet.type';
 
 export const createTweetAction = async ({
   userId,
@@ -17,7 +28,7 @@ export const createTweetAction = async ({
   text,
   parentId,
   path
-}: CreateTweetActionProps) => {
+}: CreateTweetActionProps): Promise<CreateTweetActionType> => {
   try {
     return await prisma.thread.create({
       data: {
@@ -34,7 +45,7 @@ export const createTweetAction = async ({
   }
 };
 
-export async function getTweetAction(id: string) {
+export async function getTweetAction(id: string): Promise<GetTweetActionType> {
   try {
     if (!id) throw new Error('id required');
 
@@ -42,7 +53,7 @@ export async function getTweetAction(id: string) {
       where: { id }
     });
 
-    if (!existingTweet) return null;
+    if (!existingTweet) return;
 
     return await prisma.thread.findUnique({
       where: { id },
@@ -81,7 +92,7 @@ export async function getTweetsAction({
   isReplies = false,
   isLikes = false,
   parentId = ''
-}: GetTweetsActionProps): Promise<GetTweetsActionType | undefined> {
+}: GetTweetsActionProps): Promise<GetTweetsActionType> {
   try {
     if (!userId) throw new Error('userId required');
     const skip = size * page;
@@ -163,7 +174,7 @@ export async function getTotalTweetsAction({
   isReplies = false,
   isLikes = false,
   parentId = ''
-}: GetTweetsActionProps): Promise<number | undefined> {
+}: GetTweetsActionProps): Promise<GetTotalTweetsActionType> {
   try {
     if (!userId) throw new Error('userId required');
 
@@ -206,7 +217,7 @@ export async function getTweetsBySearchAction({
   size = 30,
   page = 0,
   searchQuery = ''
-}: GetTweetsBySearchActionProps): Promise<GetTweetsActionType | undefined> {
+}: GetTweetsBySearchActionProps): Promise<GetTweetsActionType> {
   try {
     const skip = size * page;
 
@@ -281,15 +292,16 @@ export async function getTweetsBySearchAction({
   }
 }
 
-export async function deleteTweetAction(id: string, path: string) {
+export async function deleteTweetAction(
+  id: string,
+  path: string
+): Promise<DeleteTweetActionType> {
   try {
     if (!id) throw new Error('id required');
 
-    const result = await prisma.thread.delete({
+    return await prisma.thread.delete({
       where: { id }
     });
-
-    return result;
   } catch (error: any) {
     console.log('[ERROR_DELETE_TWEET_ACTION]', error);
   } finally {
@@ -301,7 +313,7 @@ export async function toggleLikeAction({
   userId = '',
   threadId = '',
   path
-}: ToggleLikeActionProps) {
+}: ToggleLikeActionProps): Promise<ToggleLikeActionType> {
   try {
     const existingLike = await prisma.like.findFirst({
       where: {
@@ -333,7 +345,7 @@ export async function toggleBookmarkAction({
   userId = '',
   threadId = '',
   path
-}: ToggleBookmarkActionProps) {
+}: ToggleBookmarkActionProps): Promise<ToggleBookmarkActionType> {
   try {
     const existingBookmark = await prisma.bookmark.findFirst({
       where: {
@@ -361,7 +373,9 @@ export async function toggleBookmarkAction({
   }
 }
 
-export async function getTotalBookmarksAction(userId: string) {
+export async function getTotalBookmarksAction(
+  userId: string
+): Promise<GetTotalBookmarkActionType> {
   try {
     if (!userId) throw new Error('userId required');
 
@@ -379,18 +393,19 @@ export async function getTotalBookmarksAction(userId: string) {
   }
 }
 
-export async function deleteBookmarksAction(userId: string, path: string) {
+export async function deleteBookmarksAction(
+  userId: string,
+  path: string
+): Promise<DeleteBookmarksAction> {
   try {
     if (!userId) throw new Error('userId required');
 
-    const deleteBookmarks = await prisma.bookmark.deleteMany({
+    return await prisma.bookmark.deleteMany({
       where: { userId }
     });
-
-    return deleteBookmarks;
   } catch (error: any) {
     console.log('[ERROR_DELETE_BOOKMARKS_ACTION]', error);
   } finally {
-    revalidatePath(path || '/bookmarks');
+    revalidatePath(path);
   }
 }
