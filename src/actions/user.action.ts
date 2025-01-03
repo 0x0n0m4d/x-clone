@@ -87,50 +87,40 @@ export async function getUsersAction({
   userId,
   searchQuery = '',
   isOnSearch
-}: GetUsersActionProps) {
+}: GetUsersActionProps): Promise<User[] | undefined> {
   try {
     if (!userId) throw new Error('userId required');
 
+    let whereFilter = {
+      NOT: {
+        followers: {
+          some: { followingId: userId }
+        }
+      },
+      id: { not: userId }
+    } as any;
+
     if (isOnSearch) {
-      if (!searchQuery) return [];
-      return await prisma.user.findMany({
-        where: {
-          id: {
-            not: userId
-          },
-          OR: [
-            {
-              username: {
-                contains: searchQuery
-              }
-            },
-            {
-              name: {
-                contains: searchQuery
-              }
-            }
-          ]
+      whereFilter = {
+        id: {
+          not: userId
         },
-        take: size
-      });
+        OR: [
+          {
+            username: { contains: searchQuery }
+          },
+          {
+            name: { contains: searchQuery }
+          }
+        ]
+      };
     }
 
     const skip = size * page;
 
-    await prisma.user.findMany({
-      where: {
-        NOT: {
-          followers: {
-            some: {
-              followingId: userId
-            }
-          }
-        },
-        id: {
-          not: userId
-        }
-      },
-      skip: skip ?? 0,
+    return await prisma.user.findMany({
+      where: whereFilter,
+      skip,
       take: size
     });
   } catch (error: any) {
