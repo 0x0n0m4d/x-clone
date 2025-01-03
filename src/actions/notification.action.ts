@@ -193,6 +193,21 @@ export const markAsReadNotification = async (
   }
 };
 
+export const getTotalNotificationsAction = async (
+  userId: string
+): Promise<number | undefined> => {
+  try {
+    return await prisma.notification.count({
+      where: {
+        userId,
+        isRead: { not: true }
+      }
+    });
+  } catch (error) {
+    console.info('[ERROR_GET_TOTAL_NOTIFICATIOS_ACTION]', error);
+  }
+};
+
 export const markAllNotificationsAsReadAction = async (
   userId: string,
   path: string
