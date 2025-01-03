@@ -40,7 +40,7 @@ const Page = async ({ searchParams }: Props) => {
           />
         </>
       ) : (
-        <NotFound description="No posts can be displayed" />
+        <NotFound title="No posts can be displayed" />
       )}
     </>
   );

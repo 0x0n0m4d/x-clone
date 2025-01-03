@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
-import NotFound from '@/components/sharing/404';
+import NotFound from '@/components/sharing/NotFound';
 import PaginationButtons from '@/components/sharing/PaginationButtons';
 import { isValidPage } from '@/lib/utils';
 
@@ -55,33 +55,16 @@ const Page = async ({ params, searchParams }: Props) => {
     page
   });
 
-  const savePostsForLater = () => {
-    return (
-      <div className="flex justify-center mt-8 px-3">
-        <div className="flex flex-col items-start max-w-[300px]">
-          {currentUser.id === user.id ? (
-            <>
-              <h1 className="text-3xl font-extrabold tracking-wide">
-                You don't have any likes yet
-              </h1>
-              <p className="font-normal text-gray-200">
-                Tap the heart on any post to show it some love. When you do,
-                it'll show up here.
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className="text-3xl font-extrabold tracking-wide">
-                @{user.username} hasn't
-              </h1>
-              <p className="font-normal text-gray-200">
-                When they do, those posts will show up here.
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-    );
+  const savePostsForLater = (): JSX.Element => {
+    const isSameUserId = currentUser.id === user.id;
+    const title = isSameUserId
+      ? "You don't have any likes yet"
+      : `@${user.username} hasn't`;
+    const description = isSameUserId
+      ? "Tap the heart on any post to show it some love. When you do, it'll show up here..."
+      : 'When they do, those posts will show up here.';
+
+    return <NotFound title={title} description={description} />;
   };
 
   return !tweets?.data.length ? (

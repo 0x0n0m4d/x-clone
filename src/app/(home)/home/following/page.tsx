@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
+import NotFound from '@/components/sharing/NotFound';
 import PaginationButtons from '@/components/sharing/PaginationButtons';
 import { isValidPage } from '@/lib/utils';
 
@@ -32,7 +33,7 @@ const Page = async ({ searchParams }: Props) => {
 
   return (
     <>
-      {tweets?.data.length && (
+      {tweets?.data.length ? (
         <>
           {tweets?.data.map(tweet => (
             <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
@@ -43,6 +44,11 @@ const Page = async ({ searchParams }: Props) => {
             hasNext={tweets.hasNext}
           />
         </>
+      ) : (
+        <NotFound
+          title="No posts con be displayed"
+          description="You haven't followed anyone or the people you follow have no posts at all"
+        />
       )}
     </>
   );
