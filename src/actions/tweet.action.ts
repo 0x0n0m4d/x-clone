@@ -9,6 +9,7 @@ import {
   ToggleLikeActionProps
 } from '@/interfaces/tweet.interface';
 import prisma from '@/lib/prismadb';
+import { GetTweetsActionType } from '@/types/tweet.type';
 
 export const createTweetAction = async ({
   userId,
@@ -252,37 +253,42 @@ export async function getTweetsByUserIdAction(
 }
 
 export async function getTweetsBySearchAction({
-  size = 5,
+  size = 30,
+  page = 0,
   searchQuery = ''
-}: GetTweetsBySearchActionProps) {
+}: GetTweetsBySearchActionProps): Promise<GetTweetsActionType | undefined> {
   try {
-    return await prisma.thread.findMany({
-      where: {
-        parentId: null,
-        OR: [
-          {
-            text: {
-              contains: searchQuery
-            }
-          },
-          {
-            user: {
-              OR: [
-                {
-                  name: {
-                    contains: searchQuery
-                  }
-                },
-                {
-                  username: {
-                    contains: searchQuery
-                  }
-                }
-              ]
-            }
+    const skip = size * page;
+
+    const whereFilter = {
+      parentId: null,
+      OR: [
+        {
+          text: {
+            contains: searchQuery
           }
-        ]
-      },
+        },
+        {
+          user: {
+            OR: [
+              {
+                name: {
+                  contains: searchQuery
+                }
+              },
+              {
+                username: {
+                  contains: searchQuery
+                }
+              }
+            ]
+          }
+        }
+      ]
+    } as any;
+
+    const data = await prisma.thread.findMany({
+      where: whereFilter,
       include: {
         user: {
           select: {
@@ -307,8 +313,19 @@ export async function getTweetsBySearchAction({
           _count: 'desc'
         }
       },
+      skip,
       take: size
     });
+
+    const remainingData = await prisma.thread.count({
+      where: whereFilter
+    });
+    const hasNext = Boolean(remainingData - skip - data.length);
+
+    return {
+      data,
+      hasNext
+    };
   } catch (error) {
     console.info('[ERROR_GET_TWEETS_BY_SEARCH_ACTION]', error);
   }

@@ -46,6 +46,7 @@ export interface ToggleBookmarkTweetProps extends InitialProps {
 
 export interface GetTweetsBySearchActionProps {
   size?: number;
+  page?: number;
   searchQuery: string;
 }
 
