@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import * as z from 'zod';
 import {
   commentPostNotificationAction,
@@ -55,7 +55,6 @@ const CreateTweetForm = ({
   const onCloseModal = useTweetModal(state => state.onClose);
   const { dataTweet, setDataTweet } = useReplyTweet();
   const path = usePathname();
-  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();

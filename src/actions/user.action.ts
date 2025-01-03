@@ -1,5 +1,6 @@
 'use server';
 
+import { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import {
   GetUsersActionProps,
@@ -18,20 +19,17 @@ export async function saveUserAction({
   email,
   bio,
   isCompleted
-}: SaveUserActionProps) {
+}: SaveUserActionProps): Promise<User | undefined> {
   try {
     if (!id) throw new Error('id required');
-    if (!imageUrl) throw new Error('imageUrl required');
     if (!name) throw new Error('name required');
-    if (!username) throw new Error('username required');
-    if (!email) throw new Error('email required');
     if (!isCompleted) throw new Error('isCompleted required');
 
     const existingUser = await prisma.user.findUnique({
       where: { id }
     });
     if (existingUser) {
-      const updateUser = await prisma.user.update({
+      return await prisma.user.update({
         where: { id },
         data: {
           name,
@@ -40,10 +38,12 @@ export async function saveUserAction({
           isCompleted
         }
       });
-      return updateUser;
     }
 
-    const newUser = await prisma.user.create({
+    if (!imageUrl) throw new Error('imageUrl required');
+    if (!username) throw new Error('username required');
+    if (!email) throw new Error('email required');
+    return await prisma.user.create({
       data: {
         id,
         imageUrl,
@@ -54,8 +54,6 @@ export async function saveUserAction({
         isCompleted
       }
     });
-
-    return newUser;
   } catch (error: any) {
     console.log('[ERROR_SAVE_USER_ACTION]', error);
   }
