@@ -12,18 +12,28 @@ interface Props {
 
 const PaginationButtons = ({ currentPath, currentPage, hasNext }: Props) => {
   const [isMount, setIsMount] = useState(false);
-  const [isPendingPrev] = useTransition();
-  const [isPendingNext] = useTransition();
+  const [isPendingPrev, startTransitionPrev] = useTransition();
+  const [isPendingNext, startTransitionNext] = useTransition();
   const router = useRouter();
 
   const nextHandler = () => {
     if (!hasNext || isPendingNext) return;
-    router.push(`${currentPath}?page=${currentPage + 1}`);
+    const nextPage = currentPage + 1;
+    const nextUrl = `${currentPath}${currentPath.includes('?') ? '&' : '?'}page=${nextPage}`;
+
+    startTransitionNext(() => {
+      router.push(nextUrl);
+    });
   };
 
   const prevHandler = () => {
     if (currentPage <= 0 || isPendingPrev) return;
-    router.push(`${currentPath}?page=${currentPage - 1}`);
+    const prevPage = currentPage - 1;
+    const prevUrl = `${currentPath}${currentPath.includes('?') ? '&' : '?'}page=${prevPage}`;
+
+    startTransitionPrev(() => {
+      router.push(prevUrl);
+    });
   };
 
   useEffect(() => {
@@ -40,8 +50,8 @@ const PaginationButtons = ({ currentPath, currentPage, hasNext }: Props) => {
       >
         Prev
       </Button>
-      <p>{isPendingNext || currentPage + 1}</p>
-      <Button onClick={nextHandler} disabled={!hasNext}>
+      <p>{currentPage + 1}</p>
+      <Button onClick={nextHandler} disabled={isPendingNext || !hasNext}>
         Next
       </Button>
     </section>
