@@ -17,7 +17,7 @@ const LeftSidebar = ({
   totalUnreadNotifications
 }: LeftSidebarProps) => {
   return (
-    <aside className="w-fit h-screen p-3 border-r border-r-gray-300 max-sm:hidden sm:flex">
+    <aside className="w-fit max-w-[280px] h-screen p-3 max-sm:hidden sm:flex">
       <section className="overflow-y-auto space-y-20 flex flex-col justify-between">
         <Lists
           username={username}
