@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { getTotalTweetsAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tabs from '@/components/profile/Tabs';
 import Topbar from '@/components/profile/Topbar';
@@ -49,10 +50,22 @@ const Layout = async ({ children, params }: Props) => {
   const user = await getUserByUsernameAction(username);
   if (!user) return <NotFound />;
 
+  const [totalTweets, totalReplies, totalLikes] = await Promise.all([
+    getTotalTweetsAction({ userId: user.id, isProfile: true }),
+    getTotalTweetsAction({ userId: user.id, isProfile: true, isReplies: true }),
+    getTotalTweetsAction({ userId: user.id, isProfile: true, isLikes: true })
+  ]);
+
   return (
     <>
       <ButtonCreatePostMobile />
-      <Topbar name={user.name} username={user.username} userId={user.id} />
+      <Topbar
+        name={user.name}
+        username={user.username}
+        totalTweets={totalTweets ?? 0}
+        totalReplies={totalReplies ?? 0}
+        totalLikes={totalLikes ?? 0}
+      />
       <UserProfile
         isMyProfile={currentUser.id === user.id}
         user={user}
