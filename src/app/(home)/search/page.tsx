@@ -9,9 +9,7 @@ import People from '@/components/search/People';
 import Tabs from '@/components/search/Tabs';
 import Top from '@/components/search/Top';
 import NotFound from '@/components/sharing/NotFound';
-import { DetailedTweet } from '@/interfaces/tweet.interface';
 import { isValidPage } from '@/lib/utils';
-import { GetUsersActionType } from '@/types/user.type';
 
 interface Props {
   searchParams: {
@@ -20,12 +18,6 @@ interface Props {
     page: string;
   };
 }
-
-type DisplayContentType = {
-  queryF: string;
-  users: GetUsersActionType | undefined;
-  tweets: DetailedTweet[] | undefined;
-};
 
 export const generateMetadata = async ({ searchParams }: Props) => {
   const { q: queryQ } = searchParams;
@@ -62,11 +54,7 @@ const Page = async ({ searchParams }: Props) => {
     searchQuery: queryQ
   });
 
-  const DisplayContent = ({
-    users,
-    tweets,
-    queryF
-  }: DisplayContentType): ReactNode => {
+  const DisplayContent = (): ReactNode => {
     const Comp = {
       top: (
         <Top
@@ -97,7 +85,7 @@ const Page = async ({ searchParams }: Props) => {
 
     const [isUsersDataExist, isTweetsDataExist, isQueryFExist] = [
       Boolean(users?.data.length),
-      Boolean(tweets?.length),
+      Boolean(tweets?.data.length),
       Boolean(queryF)
     ];
 
@@ -110,7 +98,7 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <Tabs />
-      <DisplayContent queryF={queryF} users={users} tweets={tweets} />
+      <DisplayContent />
     </>
   );
 };
