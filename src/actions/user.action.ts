@@ -9,6 +9,7 @@ import {
   UpdateUserActionProps
 } from '@/interfaces/user.interface';
 import prisma from '@/lib/prismadb';
+import { GetUsersActionType } from '@/types/user.type';
 
 export async function saveUserAction({
   id,
@@ -87,9 +88,10 @@ export async function getUsersAction({
   userId,
   searchQuery = '',
   isOnSearch
-}: GetUsersActionProps): Promise<User[] | undefined> {
+}: GetUsersActionProps): Promise<GetUsersActionType | undefined> {
   try {
     if (!userId) throw new Error('userId required');
+    if (isOnSearch && !searchQuery) return;
 
     let whereFilter = {
       NOT: {
@@ -117,12 +119,21 @@ export async function getUsersAction({
     }
 
     const skip = size * page;
-
-    return await prisma.user.findMany({
+    const data = await prisma.user.findMany({
       where: whereFilter,
       skip,
       take: size
     });
+
+    const remainingData = await prisma.user.count({
+      where: whereFilter
+    });
+    const hasNext = Boolean(remainingData - skip - data.length);
+
+    return {
+      data,
+      hasNext
+    };
   } catch (error: any) {
     console.log('[ERROR_GET_USERS_ACTION]', error);
   }
