@@ -1,14 +1,7 @@
 import { Toaster } from 'react-hot-toast';
 import { ClerkProvider } from '@clerk/nextjs';
-import { Lato } from 'next/font/google';
-import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import './globals.css';
-
-const font = Lato({
-  subsets: ['latin'],
-  weight: ['300', '400', '700', '900']
-});
 
 export const metadata: Metadata = {
   title: {
@@ -33,7 +26,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={cn('bg-black-100 text-white', font.className)}>
+        <body className="bg-black-100 text-white font-lato">
           <Toaster position="bottom-center" />
           <main className="h-full">{children}</main>
         </body>
