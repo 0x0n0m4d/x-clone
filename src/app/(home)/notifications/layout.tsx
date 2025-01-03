@@ -2,7 +2,7 @@ import { ReactNode, Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { getNotifications } from '@/actions/notification.action';
+import { getNotificationsAction } from '@/actions/notification.action';
 import { getUserAction } from '@/actions/user.action';
 import Topbar from '@/components/notifications/Topbar';
 import Loading from '@/components/sharing/Loading';
@@ -26,10 +26,9 @@ const Layout = async ({ children }: Props) => {
   const user = await getUserAction(clerkUser.id);
   if (!user) redirect('/');
 
-  let notifications = await getNotifications({ userId: user.id });
-  if (!notifications) notifications = [];
+  let notifications = await getNotificationsAction({ userId: user.id });
 
-  const isNotificationEmpty = !Boolean(notifications.length);
+  const isNotificationEmpty = !Boolean(notifications?.data.length);
   return (
     <>
       <Topbar userId={user.id} isNotificationEmpty={isNotificationEmpty} />

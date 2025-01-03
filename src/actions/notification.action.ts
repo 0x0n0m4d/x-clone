@@ -122,16 +122,16 @@ export const replyCommentPostNotificationAction = async ({
   }
 };
 
-export const getNotifications = async ({
+export const getNotificationsAction = async ({
   userId,
-  size = 20,
+  size = 30,
   page = 0
 }: GetNotificationActionProps) => {
   try {
     if (!userId) throw new Error('userId required');
 
     const skip = size * page;
-    return await prisma.notification.findMany({
+    const data = await prisma.notification.findMany({
       where: { userId },
       include: {
         sourceUser: {
@@ -155,6 +155,16 @@ export const getNotifications = async ({
       skip,
       take: size
     });
+
+    const remainingData = await prisma.notification.count({
+      where: { userId }
+    });
+    const hasNext = Boolean(remainingData - data.length - skip);
+
+    return {
+      data,
+      hasNext
+    };
   } catch (error) {
     console.info('[ERROR_GET_NOTIFICATIONS]', error);
   }
