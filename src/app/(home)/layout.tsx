@@ -23,9 +23,10 @@ const Layout = async ({ children }: Props) => {
   const isCompleted = user.isCompleted;
   if (!isCompleted) redirect('/onboarding');
 
-  let users = await getUsersAction({ userId: user.id });
-
-  const totalUnreadNotifications = await getTotalNotificationsAction(user.id);
+  const [users, totalUnreadNotifications] = await Promise.all([
+    getUsersAction({ userId: user.id }),
+    getTotalNotificationsAction(user.id)
+  ]);
 
   return (
     <main className="max-h-screen overflow-hidden">
