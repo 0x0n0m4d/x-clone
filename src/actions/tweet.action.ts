@@ -19,7 +19,7 @@ export const createTweetAction = async ({
   path
 }: CreateTweetActionProps) => {
   try {
-    await prisma.thread.create({
+    return await prisma.thread.create({
       data: {
         userId,
         imageUrl,
@@ -361,33 +361,15 @@ export async function toggleBookmarkAction({
   }
 }
 
-export async function getBookmarksAction(userId: string) {
+export async function getTotalBookmarksAction(userId: string) {
   try {
     if (!userId) throw new Error('userId required');
 
-    await prisma.thread.findMany({
+    return await prisma.thread.count({
       where: {
         bookmarks: {
           some: {
             userId
-          }
-        }
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            imageUrl: true,
-            followers: true,
-            followings: true
-          }
-        },
-        bookmarks: true,
-        likes: true,
-        _count: {
-          select: {
-            replies: true
           }
         }
       }

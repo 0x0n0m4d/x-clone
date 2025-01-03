@@ -22,7 +22,7 @@ export const followUserNotificationAction = async ({
     if (!sourceId) throw new Error('sourceId required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.create({
+    return await prisma.notification.create({
       data: {
         userId,
         parentIdUser,
@@ -50,7 +50,7 @@ export const likePostNotificationAction = async ({
     if (!parentIdPost) throw new Error('parentIdPost required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.create({
+    return await prisma.notification.create({
       data: {
         userId,
         sourceId,
@@ -78,7 +78,7 @@ export const commentPostNotificationAction = async ({
     if (!parentIdPost) throw new Error('parentIdPost required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.create({
+    return await prisma.notification.create({
       data: {
         userId,
         sourceId,
@@ -106,7 +106,7 @@ export const replyCommentPostNotificationAction = async ({
     if (!parentIdPost) throw new Error('parentIdPost required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.create({
+    return await prisma.notification.create({
       data: {
         userId,
         sourceId,
@@ -178,7 +178,7 @@ export const markAsReadNotification = async (
     if (!notificationId) throw new Error('notificationId required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.update({
+    return await prisma.notification.update({
       where: {
         id: notificationId
       },
@@ -216,7 +216,7 @@ export const markAllNotificationsAsReadAction = async (
     if (!userId) throw new Error('userId required');
     if (!path) throw new Error('path required');
 
-    await prisma.notification.updateMany({
+    return await prisma.notification.updateMany({
       where: { userId },
       data: {
         isRead: true
@@ -236,7 +236,7 @@ export const deleteNotificationAction = async (
   try {
     if (!notificationId) throw new Error('notificationId required');
 
-    await prisma.notification.delete({
+    return await prisma.notification.delete({
       where: { id: notificationId }
     });
   } catch (error) {
