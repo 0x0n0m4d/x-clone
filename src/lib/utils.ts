@@ -1,12 +1,13 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { ConvertToHttpsType } from '@/types';
 import type { ClassValue } from 'clsx';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function customDatePost(timestamp: number) {
+export function customDatePost(timestamp: number): string {
   const now = Date.now();
   const timeDiff = now - timestamp;
 
@@ -32,7 +33,7 @@ export function customDatePost(timestamp: number) {
   }
 }
 
-export const formatDateTime = (Date: Date) => {
+export const formatDateTime = (Date: Date): string => {
   const formattedTime = Date.toLocaleString([], {
     hour: '2-digit',
     minute: '2-digit'
@@ -55,21 +56,21 @@ export const toastOptions = {
 };
 
 export const months = [
-  'Januari',
-  'Februari',
-  'Maret',
+  'January',
+  'February',
+  'March',
   'April',
-  'Mei',
-  'Juni',
-  'Juli',
-  'Agustus',
+  'May',
+  'June',
+  'July',
+  'August',
   'September',
-  'Oktober',
+  'October',
   'November',
-  'Desember'
+  'December'
 ];
 
-export function convertToHttps(url: string) {
+export function convertToHttps(url: string): ConvertToHttpsType {
   if (!url) return;
 
   if (url.startsWith('https://')) {
@@ -90,7 +91,7 @@ export function convertToHttps(url: string) {
   }
 }
 
-export const getCurrentPath = () => {
+export const getCurrentPath = (): string => {
   const path = window.location.pathname;
   const searchParams = window.location.search;
 
