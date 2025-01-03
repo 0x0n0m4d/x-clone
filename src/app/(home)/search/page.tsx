@@ -46,12 +46,13 @@ const Page = async ({ searchParams }: Props) => {
     userId: user.id,
     isOnSearch: true,
     searchQuery: queryQ,
-    page,
+    page: queryF === 'people' ? page : 0,
     size: 30
   });
 
   const tweets = await getTweetsBySearchAction({
-    searchQuery: queryQ
+    searchQuery: queryQ,
+    page
   });
 
   const DisplayContent = (): ReactNode => {
@@ -62,6 +63,7 @@ const Page = async ({ searchParams }: Props) => {
           queryQ={queryQ}
           people={users?.data}
           tweets={tweets}
+          page={page}
         />
       ),
       latest: <Latest userId={user.id} tweets={tweets} />,

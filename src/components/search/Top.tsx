@@ -6,25 +6,27 @@ import { UserWithFollowers } from '@/interfaces/user.interface';
 import { GetTweetsActionType } from '@/types/tweet.type';
 import Tweets from '../cards/tweets/Tweets';
 import UsersTwo from '../cards/UsersTwo';
+import PaginationButtons from '../sharing/PaginationButtons';
 
 interface Props {
   tweets: GetTweetsActionType | undefined;
   people: User[] | undefined;
   currentUser: UserWithFollowers;
   queryQ: string;
+  page: number;
 }
 
-const Top = ({ tweets, people, currentUser, queryQ }: Props) => {
+const Top = ({ tweets, people, currentUser, queryQ, page }: Props) => {
   const optionLink = {
     pathname: '/search',
     query: { q: queryQ, f: 'people' }
   };
 
-  const isDataPeopleEmpty = !people?.length;
+  const path = `/search?q=${queryQ}`;
 
   return (
     <>
-      {!isDataPeopleEmpty && (
+      {people?.length ? (
         <section className="border-b border-gray-300">
           <h2 className="text-xl font-bold px-3 py-4">People</h2>
           {people.slice(0, 3).map(user => (
@@ -46,12 +48,19 @@ const Top = ({ tweets, people, currentUser, queryQ }: Props) => {
             </div>
           )}
         </section>
-      )}
-      {tweets?.data.length
-        ? tweets.data.map(tweet => (
+      ) : null}
+      {tweets?.data.length ? (
+        <>
+          {tweets.data.map(tweet => (
             <Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
-          ))
-        : null}
+          ))}
+          <PaginationButtons
+            currentPage={page}
+            currentPath={path}
+            hasNext={tweets.hasNext}
+          />
+        </>
+      ) : null}
     </>
   );
 };
