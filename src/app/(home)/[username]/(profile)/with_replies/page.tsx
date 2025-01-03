@@ -1,13 +1,18 @@
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getTweetsByUserIdAction } from '@/actions/tweet.action';
+import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
 import NotFound from '@/components/sharing/404';
+import PaginationButtons from '@/components/sharing/PaginationButtons';
+import { isValidPage } from '@/lib/utils';
 
 interface Props {
   params: {
     username: string;
+  };
+  searchParams: {
+    page: string;
   };
 }
 
@@ -29,8 +34,10 @@ export const generateMetadata = async ({ params }: Props) => {
   };
 };
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params, searchParams }: Props) => {
   const username = params.username;
+  const { page: qPage } = searchParams;
+  const page = isValidPage(qPage);
 
   const clerkUser = await clerkCurrentUser();
   if (!clerkUser) return null;
@@ -41,16 +48,23 @@ const Page = async ({ params }: Props) => {
   const user = await getUserByUsernameAction(username);
   if (!user) return <NotFound />;
 
-  let replies = await getTweetsByUserIdAction(user.id, true);
-  if (!replies?.length) replies = [];
+  let tweets = await getTweetsAction({
+    userId: user.id,
+    isProfile: true,
+    isReplies: true,
+    page
+  });
 
-  return (
+  return tweets?.data.length ? (
     <>
-      {replies.map(tweet => (
-        <Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
-      ))}
+      {tweets?.data.map(tweet => <Tweets tweet={tweet} userId={user.id} />)}
+      <PaginationButtons
+        currentPage={page}
+        currentPath={`/${user.username}/with_replies`}
+        hasNext={tweets.hasNext}
+      />
     </>
-  );
+  ) : null;
 };
 
 export default Page;

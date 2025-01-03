@@ -1,20 +1,34 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { getBookmarksAction } from '@/actions/tweet.action';
+import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import Tweets from '@/components/cards/tweets/Tweets';
+import PaginationButtons from '@/components/sharing/PaginationButtons';
+import { isValidPage } from '@/lib/utils';
 
-const Page = async () => {
+interface Props {
+  searchParams: {
+    page: string;
+  };
+}
+
+const Page = async ({ searchParams }: Props) => {
+  const { page: qPage } = searchParams;
+  const page = isValidPage(qPage);
+
   const clerkUser = await currentUser();
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id);
   if (!user) redirect('/');
 
-  let bookmarks = await getBookmarksAction(user.id);
-  if (!bookmarks?.length) bookmarks = [];
+  const tweets = await getTweetsAction({
+    userId: user.id,
+    isBookmarks: true,
+    page
+  });
 
-  const isBookmarksEmpty = !bookmarks.length;
+  const isBookmarksEmpty = !tweets?.data.length;
 
   const savePostsForLater = () => {
     return (
@@ -31,9 +45,22 @@ const Page = async () => {
     );
   };
 
-  return isBookmarksEmpty
-    ? savePostsForLater()
-    : bookmarks.map(tweet => <Tweets tweet={tweet} userId={user.id} />);
+  return (
+    <>
+      {!isBookmarksEmpty ? (
+        <>
+          {tweets?.data.map(tweet => <Tweets tweet={tweet} userId={user.id} />)}
+          <PaginationButtons
+            currentPage={page}
+            currentPath="/bookmarks"
+            hasNext={tweets.hasNext}
+          />
+        </>
+      ) : (
+        savePostsForLater()
+      )}
+    </>
+  );
 };
 
 export default Page;
