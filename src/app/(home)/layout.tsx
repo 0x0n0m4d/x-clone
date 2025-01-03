@@ -24,7 +24,6 @@ const Layout = async ({ children }: Props) => {
   if (!isCompleted) redirect('/onboarding');
 
   let users = await getUsersAction({ userId: user.id });
-  if (!users?.length) users = [];
 
   const totalUnreadNotifications = await getTotalNotificationsAction(user.id);
 
@@ -41,7 +40,7 @@ const Layout = async ({ children }: Props) => {
         <section className="hide-scrollbar max-sm:border-none border-l border-r border-gray-300 max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0 w-full max-sm:max-w-full max-x-[600px]">
           {children}
         </section>
-        <RightSidebar users={users} user={user} />
+        <RightSidebar users={users?.data!} user={user} />
       </section>
       <Bottombar username={user.username} />
     </main>
