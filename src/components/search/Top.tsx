@@ -18,11 +18,10 @@ interface Props {
 
 const Top = ({ tweets, people, currentUser, queryQ, page }: Props) => {
   const optionLink = {
-    pathname: '/search',
-    query: { q: queryQ, f: 'people' }
-  };
-
-  const path = `/search?q=${queryQ}`;
+      pathname: '/search',
+      query: { q: queryQ, f: 'people' }
+    },
+    path = `/search?q=${queryQ}`;
 
   return (
     <>

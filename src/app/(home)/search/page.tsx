@@ -66,11 +66,15 @@ const Page = async ({ searchParams }: Props) => {
           page={page}
         />
       ),
-      latest: <Latest userId={user.id} tweets={tweets} />,
+      latest: (
+        <Latest userId={user.id} tweets={tweets} queryQ={queryQ} page={page} />
+      ),
       people: (
         <People page={page} queryQ={queryQ} people={users} currentUser={user} />
       ),
-      media: <Media tweets={tweets} userId={user.id} />,
+      media: (
+        <Media tweets={tweets} userId={user.id} page={page} queryQ={queryQ} />
+      ),
       notFound: (
         <NotFound
           title={`No results for "${queryQ}"`}
