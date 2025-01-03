@@ -67,11 +67,16 @@ const Menu = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full">
-          <MoreHorizontal />
+        <DropdownMenuTrigger className="!outline-none text-gray-200 bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full">
+          <MoreHorizontal className="w-5 h-5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
-          <DropdownMenuItem onClick={redirectToDetailPost}>
+          <DropdownMenuItem
+            onClick={e => {
+              e.stopPropagation();
+              redirectToDetailPost();
+            }}
+          >
             <ArrowUpRight size="30px" />
             Go To Post
           </DropdownMenuItem>

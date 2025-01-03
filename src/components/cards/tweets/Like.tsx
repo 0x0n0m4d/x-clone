@@ -31,10 +31,11 @@ const Like = ({
       variant="icon"
       size="icon"
       className={cn(
-        'flex items-center gap-x-2 transition',
-        liked ? 'text-red-500' : 'text-gray-200 hover:text-red-500'
+        'flex items-center gap-x-2 transition-all group',
+        liked ? 'text-pink-600' : 'text-gray-200 hover:text-pink-600'
       )}
-      onClick={() =>
+      onClick={e => {
+        e.stopPropagation();
         toggleLikeTweet({
           isPending,
           startTransition,
@@ -43,22 +44,28 @@ const Like = ({
           currentUserId,
           threadId,
           path
-        })
-      }
+        });
+      }}
       disabled={isPending}
     >
       {liked ? (
-        <Image
-          src="/assets/heart-fill-icon.svg"
-          alt="Heart Fill"
-          width={20}
-          height={20}
-          className="object-contain"
-        />
+        <div className="p-1 group-hover:bg-pink-600/20 rounded-full">
+          <div className="w-6 h-6">
+            <Image
+              src="/assets/heart-fill-icon.svg"
+              alt="Heart Fill"
+              width={20}
+              height={20}
+              className="h-6 w-6"
+            />
+          </div>
+        </div>
       ) : (
-        <Heart size="20" />
+        <span className="p-2 group-hover:bg-pink-600/20 rounded-full">
+          <Heart className="w-4 h-4" />
+        </span>
       )}
-      <span className="text-sm font-extrabold">{totalLikes}</span>
+      <b>{totalLikes}</b>
     </Button>
   );
 };

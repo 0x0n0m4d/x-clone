@@ -33,20 +33,28 @@ const Share = ({
   const [isPending, startTransition] = useTransition();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="!outline-none p-2 text-gray-200 transition hover:text-blue">
-        <ShareIcon size="20px" />
+      <DropdownMenuTrigger className="!outline-none p-2 text-gray-200 transition hover:text-blue hover:bg-blue/10 rounded-full">
+        <ShareIcon className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="end">
         <DropdownMenuItem
           className="text-blue"
-          onClick={() => copyLinkTweet({ toast, username, tweetId })}
+          onClick={e => {
+            e.stopPropagation();
+            copyLinkTweet({
+              toast,
+              username,
+              tweetId
+            });
+          }}
         >
           <LinkIcon size="20" />
           Copy Link
         </DropdownMenuItem>
         {!isDetailTweet && (
           <DropdownMenuItem
-            onClick={() =>
+            onClick={e => {
+              e.stopPropagation();
               toggleBookmarkTweet({
                 isPending,
                 startTransition,
@@ -55,8 +63,8 @@ const Share = ({
                 bookmark,
                 userId,
                 threadId: tweetId
-              })
-            }
+              });
+            }}
             disabled={isPending}
             className={cn(isPending && 'opacity-50 cursor-not-allowed')}
           >

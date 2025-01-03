@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import TweetText from '@/components/sharing/TweetText';
+import { usePrevious } from '@/hooks/usePrevious';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { DataTweet, DetailedTweet } from '@/interfaces/tweet.interface';
 import { renderText } from '@/lib/tweet';
-import { customDatePost } from '@/lib/utils';
+import { customDatePost, getCurrentPath } from '@/lib/utils';
 import { Comment, Like, Menu, Share } from './';
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
 const Tweets = ({ tweet, userId }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { addToNavigationHistory } = usePrevious();
 
   const [isMounted, setIsMounted] = useState(false);
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
@@ -60,13 +62,24 @@ const Tweets = ({ tweet, userId }: Props) => {
 
   const isOwnTweet = tweet.userId === userId;
 
+  const redirectToDetailPost = () => {
+    addToNavigationHistory(getCurrentPath());
+    router.push(`/${tweet.user.username}/status/${tweet.id}`);
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
   if (!isMounted) return null;
 
   return (
-    <section className="flex gap-x-5 px-3 py-4 border-b border-b-gray-300 transition">
+    <article
+      className="flex gap-x-5 px-3 py-4 border-b border-b-gray-300 bg-black-100 hover:bg-black-200/20 transition-all cursor-pointer"
+      onClick={e => {
+        e.stopPropagation();
+        redirectToDetailPost();
+      }}
+    >
       <div className="flex items-start jsutify-start rounded-full overflow-hidden">
         <Image
           src={tweet.user.imageUrl}
@@ -77,9 +90,9 @@ const Tweets = ({ tweet, userId }: Props) => {
           className="object-cover rounded-full w-[35px] h-[35px]"
         />
       </div>
-      <div className="flex-1 flex flex-col space-y-10">
+      <div className="flex-1 flex flex-col">
         <section className="flex-1 flex justify-between">
-          <div className="flex-1 flex flex-col gap-y-5">
+          <div className="flex-1 flex flex-col space-y-6">
             <div className="flex-1 flex items-center flex-wrap gap-x-2">
               <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">
                 {tweet.user.name}
@@ -142,7 +155,7 @@ const Tweets = ({ tweet, userId }: Props) => {
           </section>
         </section>
       </div>
-    </section>
+    </article>
   );
 };
 

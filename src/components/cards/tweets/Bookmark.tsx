@@ -31,10 +31,11 @@ const Bookmark = ({
       variant="icon"
       size="icon"
       className={cn(
-        'flex items-center gap-x-2 transition',
+        'flex items-center gap-x-1 transition-all group',
         bookmark ? 'text-blue' : 'text-gray-200 hover:text-blue'
       )}
-      onClick={() =>
+      onClick={e => {
+        e.stopPropagation();
         toggleBookmarkTweet({
           isPending,
           startTransition,
@@ -43,22 +44,28 @@ const Bookmark = ({
           bookmark,
           userId,
           threadId
-        })
-      }
+        });
+      }}
       disabled={isPending}
     >
       {bookmark ? (
-        <Image
-          src="/assets/bookmark-fill-icon.svg"
-          alt="Bookmark Fill"
-          width={20}
-          height={20}
-          className="object-contain"
-        />
+        <div className="p-1 group-hover:bg-blue/10 transition-all rounded-full">
+          <div className="w-4 h-4">
+            <Image
+              src="/assets/bookmark-fill-icon.svg"
+              alt="Bookmark Fill"
+              width={20}
+              height={20}
+              className="w-4 h-4"
+            />
+          </div>
+        </div>
       ) : (
-        <BookmarkIcon size="20" />
+        <span className="p-2 group-hover:bg-blue/10 transition-all rounded-full">
+          <BookmarkIcon className="w-4 h-4" />
+        </span>
       )}
-      <span className="text-sm font-extrabold">{totalBookmarks}</span>
+      <b>{totalBookmarks}</b>
     </Button>
   );
 };
