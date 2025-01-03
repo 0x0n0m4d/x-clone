@@ -56,7 +56,9 @@ const Page = async ({ params, searchParams }: Props) => {
 
   return tweets?.data.length ? (
     <>
-      {tweets?.data.map(tweet => <Tweets tweet={tweet} userId={user.id} />)}
+      {tweets?.data.map(tweet => (
+        <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
+      ))}
       <PaginationButtons
         currentPage={page}
         currentPath={`/${user.username}`}

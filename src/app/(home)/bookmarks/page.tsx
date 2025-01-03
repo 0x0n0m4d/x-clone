@@ -49,7 +49,9 @@ const Page = async ({ searchParams }: Props) => {
     <>
       {!isBookmarksEmpty ? (
         <>
-          {tweets?.data.map(tweet => <Tweets tweet={tweet} userId={user.id} />)}
+          {tweets?.data.map(tweet => (
+            <Tweets key={tweet.id} tweet={tweet} userId={user.id} />
+          ))}
           <PaginationButtons
             currentPage={page}
             currentPath="/bookmarks"
