@@ -10,12 +10,14 @@ import Tabs from '@/components/search/Tabs';
 import Top from '@/components/search/Top';
 import NotFound from '@/components/sharing/NotFound';
 import { DetailedTweet } from '@/interfaces/tweet.interface';
+import { isValidPage } from '@/lib/utils';
 import { GetUsersActionType } from '@/types/user.type';
 
 interface Props {
   searchParams: {
     q: string;
     f: string;
+    page: string;
   };
 }
 
@@ -38,7 +40,8 @@ export const generateMetadata = async ({ searchParams }: Props) => {
 };
 
 const Page = async ({ searchParams }: Props) => {
-  const { q: queryQ, f: queryF } = searchParams;
+  const { q: queryQ, f: queryF, page: qPage } = searchParams;
+  const page = isValidPage(qPage);
   if (!queryQ) redirect('/explore');
 
   const clerkUser = await currentUser();
@@ -51,6 +54,7 @@ const Page = async ({ searchParams }: Props) => {
     userId: user.id,
     isOnSearch: true,
     searchQuery: queryQ,
+    page,
     size: 30
   });
 
@@ -74,7 +78,13 @@ const Page = async ({ searchParams }: Props) => {
       ),
       latest: <Latest userId={user.id} tweets={tweets} />,
       people: (
-        <People queryQ={queryQ} people={users?.data} currentUser={user} />
+        <People
+          page={page}
+          queryF={queryF}
+          queryQ={queryQ}
+          people={users}
+          currentUser={user}
+        />
       ),
       media: <Media tweets={tweets} userId={user.id} />,
       notFound: (
@@ -83,7 +93,7 @@ const Page = async ({ searchParams }: Props) => {
           description="Try searching for something else"
         />
       )
-    } as any as any;
+    } as any;
 
     const [isUsersDataExist, isTweetsDataExist, isQueryFExist] = [
       Boolean(users?.data.length),
