@@ -17,11 +17,11 @@ import {
 } from '../ui/dropdown-menu';
 
 interface Props {
-  isNotificationEmpty: boolean;
+  totalUnreadNotifications: number;
   userId: string;
 }
 
-const Topbar = ({ isNotificationEmpty, userId }: Props) => {
+const Topbar = ({ totalUnreadNotifications, userId }: Props) => {
   const path = usePathname();
   const router = useRouter();
 
@@ -68,7 +68,7 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
             </Button>
             <h2 className="font-bold tracking-wide text-xl">Notifications</h2>
           </div>
-          {!isNotificationEmpty && (
+          {Boolean(totalUnreadNotifications) && (
             <DropdownMenu>
               <DropdownMenuTrigger className="!outline-none rounded-full hover:bg-gray-300/30 p-2">
                 <MoreHorizontal size={30} />
