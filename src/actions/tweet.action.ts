@@ -256,7 +256,7 @@ export async function getTweetsBySearchAction({
   searchQuery = ''
 }: GetTweetsBySearchActionProps) {
   try {
-    await prisma.thread.findMany({
+    return await prisma.thread.findMany({
       where: {
         parentId: null,
         OR: [
