@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
-import { ArrowLeft, BookX, MoreHorizontal } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { BookX, MoreHorizontal } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { markAllNotificationsAsReadAction } from '@/actions/notification.action';
-import { usePrevious } from '@/hooks/usePrevious';
 import { toastOptions } from '@/lib/utils';
 import DeleteModal from '../modals/DeleteModal';
+import ButtonBack from '../sharing/ButtonBack';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -23,11 +23,8 @@ interface Props {
 
 const Topbar = ({ totalUnreadNotifications, userId }: Props) => {
   const path = usePathname();
-  const router = useRouter();
 
-  const { navigationHistory, goBack } = usePrevious();
   const [isPending, startTransition] = useTransition();
-  const [isPendingRedirect, startTransitionRedirect] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const markAllNotificationsAsRead = () => {
@@ -42,30 +39,12 @@ const Topbar = ({ totalUnreadNotifications, userId }: Props) => {
     });
   };
 
-  const redirectToPreviousPage = () => {
-    if (isPendingRedirect) return;
-
-    const len = navigationHistory.length - 1;
-    router.push(navigationHistory[len]);
-
-    startTransitionRedirect(() => {
-      goBack();
-    });
-  };
-
   return (
     <>
       <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
         <div className="px-3 py-4">
           <div className="flex flex-row items-center gap-x-2">
-            <Button
-              className="rounded-full hover:bg-gray-300/50 transition"
-              variant="icon"
-              size="icon"
-              onClick={redirectToPreviousPage}
-            >
-              <ArrowLeft size="16" />
-            </Button>
+            <ButtonBack />
             <div className="flex flex-col items-start justify-start">
               <h2 className="font-bold tracking-wide text-xl">Notifications</h2>
               <p className="text-sm font-normal text-gray-200">
